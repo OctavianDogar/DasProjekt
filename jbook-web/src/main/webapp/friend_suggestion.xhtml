@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:body rendered="#{friendSuggestionBean.render}">
+    <h:outputStylesheet library="css" name="style.css"/>
+    <f:view>
+        <h:form id="friendSuggest">
+            <h5 class="padd-5">
+                <strong>
+                    #{jb['friendSuggestions.label']}
+                </strong>
+                <span class="glyphicon glyphicon-plus"></span>
+            </h5>
+            <div class="list-group-item">
+                <p:dataScroller value="#{friendSuggestionBean.suggestions}" var="user">
+                    <div class="list-group-item row">
+                        <div class="col-md-6">
+                            <p:graphicImage class="media-object photo-profile" value="#{user.photo}"
+                                            width="40"
+                                            height="40"/>
+                            <h:link outcome="friend_wall.xhtml" value="#{user.firstName} #{user.lastName}"
+                                    style="font-weight:bold;">
+                                <f:param name="id" value="#{user.id}"/>
+                            </h:link>
+                        </div>
+                        <div class="col-md-6">
+                            <h:commandButton id="submit" value="#{jb['add.btn']}" action="#{friendSuggestionBean.addFriend(user)}"
+                                             update="friendSuggest" styleClass="btn"
+                                             style="width:100%; background-color: #2aabd2"/>
+                        </div>
+                    </div>
+                </p:dataScroller>
+            </div>
+        </h:form>
+    </f:view>
+</h:body>
+</html>

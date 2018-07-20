@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Wall</title>
+</h:head>
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <ui:composition template="templates/common_3_col_content.xhtml">
+        <ui:define name="content_left">
+            <f:view>
+                <h:form id="photoAndInfo" enctype="multipart/form-data">
+                    <p:tab title="Infos">
+                        <h:panelGrid columns="2" cellpadding="15">
+                            <f:facet name="header">
+                                <p:growl id="messages" showDetail="true" styleClass="padd-5"/>
+                                <p:graphicImage library="images" style="max-width: 100%;max-height: 100%"
+                                                value="#{friendWallBean.user.photo}"
+                                                styleClass="padd-5"/>
+                            </f:facet>
+                            <h:outputText value="#{jb['name.label']}"/>
+                            <h:outputText value="#{friendWallBean.user.firstName} #{friendWallBean.user.lastName}"
+                                          styleClass="padd-5"/>
+                            <h:outputText value="#{jb['birthDay']}"/>
+                            <h:outputText
+                                    value="#{friendWallBean.user.year}/#{friendWallBean.user.month}/#{friendWallBean.user.day}"
+                                    styleClass="padd-5"/>
+                        </h:panelGrid>
+                        <h:commandButton value="#{jb['sendFriendRequest']}"
+                                         action="#{friendWallBean.sendFriendRequest}"
+                                         rendered="#{friendWallBean.friendRequestButton}">
+                            <f:param name="id" value="#{friendWallBean.user.id}"/>
+                        </h:commandButton>
+                        <h:commandButton value="#{jb['confirmRequest']}"
+                                         action="#{friendWallBean.addFriend(friendWallBean.user.id)}"
+                                         rendered="#{friendWallBean.hasSentFriendRequest}">
+                            <f:param name="id" value="#{friendWallBean.user.id}"/>
+                        </h:commandButton>
+                        <p:outputPanel rendered="#{friendWallBean.friendRequestSent}">
+                            <h4 align="center" style="color: #2e6da4">#{jb['friendRequestSent']}</h4>
+                        </p:outputPanel>
+                        <p:outputPanel rendered="#{friendWallBean.hasReceivedFriendRequest}">
+                            <h4 align="center" style="color: #2e6da4">#{jb['friendRequestAlreadySent']}</h4>
+                        </p:outputPanel>
+                    </p:tab>
+                </h:form>
+            </f:view>
+        </ui:define>
+
+        <ui:define name="content_center">
+            <h:form id="posts" rendered="#{friendWallBean.leftRightRender}">
+                <ul class="list-group">
+                    <p:dataScroller value="#{friendWallBean.postDtos}" var="post">
+                        <div class="list-group-item">
+                            <f:facet name="header">#{jb['posts.label']}</f:facet>
+                            <div class="media-left">
+                                <p:graphicImage styleClass="padd-5"
+                                                library="images"
+                                                value="#{post.userPhoto}" width="50"
+                                                height="50"/>
+                            </div>
+                            <div class="padd-5 media-body">
+                                <p:link outcome="friend_wall.xhtml"
+                                        value="#{post.firstName} #{post.lastName}"
+                                        style="font-weight: bold;">
+                                    <f:param name="id" value="#{post.ownerId}"/>
+                                </p:link>
+                            </div>
+                            <div class="post-body">
+                                <div class="padd-5">
+                                    <h:outputText value="#{post.text}" style="word-break: break-all" escape="false"/>
+                                </div>
+                                <div id="photo_padding" align="center">
+                                    <p:link outcome="post_details.xhtml">
+                                        <p:graphicImage library="images" value="#{post.photo}"
+                                                        styleClass="post-picture padd-10"
+                                                        rendered="#{post.renderImage}"/>
+                                        <f:param name="id" value="#{post.id}"/>
+                                    </p:link>
+                                </div>
+                                <div id="video_padding" align="center">
+                                    <h:panelGroup id="post_video" rendered="#{post.renderVideo}">
+                                        <video controls="controls" name="media" styleClass="post-picture"
+                                               style="max-width: 100%; padding-top:15px; padding-bottom:15px">
+                                            <source src="#{post.video}" type="video/mp4"/>
+                                        </video>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="post-footer">
+                                <div class="post-footer-option">
+                                    <h:panelGroup id="footer-options" layout="block">
+                                        <p>
+                                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                                            <h:commandLink
+                                                    actionListener="#{friendWallBean.addLikeToPost(post.id)}"
+                                                    value="#{jb['like.btn']}" styleClass=" padd-15">
+                                                <p:ajax update="likes"/>
+                                            </h:commandLink>
+                                            <p:commandLink id="likes"
+                                                           actionListener="#{likePopupBean.openPopUp(post.id)}"
+                                                           value="#{post.numberOfLikes}"
+                                                           styleClass="badge padd-15">
+                                                <p:ajax event="dialogReturn"
+                                                        listener="#{friendWallBean.onUserChoosen}"/>
+                                            </p:commandLink>
+                                        </p>
+                                        <p><i class="glyphicon glyphicon-comment"></i>#{jb['comment.label']}</p>
+                                    </h:panelGroup>
+                                </div>
+                                <div class="post-footer-option">
+                                    <p:dataScroller id="comentScroller" value="#{post.comments}"
+                                                    var="comm">
+                                        <div class="media-left">
+                                            <p:graphicImage styleClass="padd-5"
+                                                            library="images"
+                                                            value="#{comm.imagePath}" width="40"
+                                                            height="40"/>
+
+                                        </div>
+                                        <div class="media-body">
+                                            <p:link outcome="friend_wall.xhtml"
+                                                    value="#{comm.firstname} #{comm.lastname}"
+                                                    style="font-weight: bold;">
+                                                <f:param name="id" value="#{comm.userId}"/>
+                                            </p:link>
+                                        </div>
+                                        <div>
+                                            <strong>
+                                                <p:outputLabel
+                                                        value="#{comm.commentText}" style="word-break: break-all" escape="false"></p:outputLabel>
+                                            </strong>
+                                        </div>
+                                    </p:dataScroller>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h:inputTextarea name="message" cols="40" rows="10" id="com"
+                                                         value="#{post.teporaryComment}"
+                                                         class="form-control message"
+                                                         style="height: 40px; max-width: 100%; max-height: 40px; overflow: hidden;"
+                                                         placeholder="#{jb['comment.label']}"></h:inputTextarea>
+                                        <p:watermark for="com" value="#{jb['comment.label']}"
+                                                     id="watermark_title"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h:commandButton id="submit" value="#{jb['add.btn']}"
+                                                         action="#{friendWallBean.addComment(post)}"
+                                                         styleClass="btn padd-5" style="min-width: 80px; width: 100%">
+                                        </h:commandButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p:dataScroller>
+                </ul>
+            </h:form>
+            <p:outputPanel rendered="#{friendWallBean.noPosts}">
+                <h3 align="center" style="color: #2e6da4">#{jb['noPosts']}</h3>
+            </p:outputPanel>
+            <p:outputPanel rendered="#{friendWallBean.privateUser}">
+                <h3 align="center" style="color: #2e6da4">#{jb['privateUser']}</h3>
+            </p:outputPanel>
+        </ui:define>
+
+        <ui:define name="content_right">
+            <f:view>
+                <h:form rendered="#{friendWallBean.leftRightRender}">
+                    <div class="list-group" style="padding-top: 20px">
+                        <div class="list-group-item padd-5">
+                            <h:link outcome="friend_wall_friends.xhtml"
+                                    value="#{jb['friends.label']}" styleClass="padd-5">
+                                <f:param name="id" value="#{friendWallBean.user.id}"/>
+                            </h:link>
+                            <span class=""></span>
+                        </div>
+                        <div class="list-group-item padd-5">
+                            <h:link outcome="friend_wall.xhtml"
+                                    value="#{jb['posts.label']}" styleClass="padd-5">
+                                <f:param name="id" value="#{friendWallBean.user.id}"/>
+                            </h:link>
+                            <span class=""></span>
+                        </div>
+                        <div class="list-group-item padd-5">
+                            <h:link outcome="friend_wall_events.xhtml"
+                                    value="#{jb['events.label']}" styleClass="padd-5">
+                                <f:param name="id" value="#{friendWallBean.user.id}"/>
+                            </h:link>
+                            <span class=""></span>
+                        </div>
+                    </div>
+                </h:form>
+            </f:view>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

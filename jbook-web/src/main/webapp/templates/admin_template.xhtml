@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+</h:head>
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <h:outputStylesheet library="css" name="bootstrap.min.css"/>
+    <h:outputStylesheet library="css" name="bootstrap.css"/>
+    <h:outputStylesheet library="css" name="bootstrap-theme.min.css"/>
+    <h:outputStylesheet library="css" name="bootstrap-theme.css"/>
+
+    <h:outputScript library="js" name="bootstrap.js"/>
+    <h:outputScript library="js" name="bootstrap.min.js"/>
+    <h:outputScript library="js" name="npm.js"/>
+
+    <div class="header general-padd">
+        <div class="row">
+            <div class="col-sm-9 image-padding">
+                <p:link outcome="admin.xhtml">
+                    <h:graphicImage library="images" name="logo.png" width="35px" height="55px"/>
+                </p:link>
+            </div>
+            <h:form>
+                <div class="col-md-3" style="padding-top: 20px">
+                    <h:commandButton value="Logout" styleClass="btn-login btn padd-10" action="#{adminBean.doLogout}"
+                                     style="background-color: #2aabd2"/>
+                </div>
+            </h:form>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="content-container general-padd">
+        <div class="content-page">
+            <div class="container-fluid">
+                <div class="col-md-6">
+                    <br/>
+                    <h:outputLabel value="Users:" style="font-weight: bold; font-size: 30px"/><br/>
+                    <div class="content_center">
+                        <ui:insert name="content_center">
+                            <ui:include src="/templates/content_center.xhtml"/>
+                        </ui:insert>
+                    </div>
+
+                </div>
+
+                <br/>
+                <div class="col-md-6">
+                    <h:outputLabel value="Events:" style="font-weight: bold; font-size: 30px"/><br/>
+
+                    <div class="content_right">
+                        <ui:insert name="content_right">
+                            <ui:include src="/templates/content_right.xhtml"/>
+                        </ui:insert>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="footer log-reg-padd">
+        <ui:insert name="footer">
+            <ui:include src="/templates/footer.xhtml"/>
+        </ui:insert>
+    </div>
+</h:body>
+</html>

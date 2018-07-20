@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head></h:head>
+<h:body>
+    <h:outputStylesheet library="css" name="create_post.css"/>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <h:outputStylesheet library="css" name="bootstrap.min.css"/>
+    <h:outputStylesheet library="css" name="bootstrap.css"/>
+    <h:outputStylesheet library="css" name="bootstrap-theme.min.css"/>
+    <h:outputStylesheet library="css" name="bootstrap-theme.css"/>
+
+    <h:outputScript library="js" name="bootstrap.js"/>
+    <h:outputScript library="js" name="bootstrap.min.js"/>
+    <h:outputScript library="js" name="npm.js"/>
+
+    <h:outputStylesheet library="css" name="create_post.css"/>
+    <h:form id="create_post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="facebook-share-box">
+                <div class="arrow"></div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="">
+                            <h:inputTextarea name="message" cols="40" rows="10"
+                                             id="status_message"
+                                             class="form-control message"
+                                             value="#{createPostInEventWall.createdPost.text}"
+                                             style="height: 62px; max-width: 100%; max-height: 300px; overflow: hidden;"
+                                             placeholder="Add a new post"></h:inputTextarea>
+                            <p:messages id="messages" autoUpdate="true" closable="true"/>
+                            <p:watermark for="status_message" value="#{jb['addPostInEvent']}"
+                                         id="watermark"/>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <div class="btn-group">
+
+                                        <p:fileUpload label="#{jb['photo']}"
+                                                      value="#{createPostInEventWall.fileUpload}"
+                                                      auto="true"
+                                                      mode="simple" skinSimple="true"
+                                                      class="icon icon-picture"/>
+                                    </div>
+
+                                    <div class="btn-group">
+
+                                        <p:fileUpload label="#{jb['video']}"
+                                                      value="#{createPostInEventWall.fileUploadVideo}"
+                                                      auto="true"
+                                                      mode="simple" skinSimple="true"
+                                                      class="icon icon-picture"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-md-offset-5">
+                                <h:commandButton id="submitPrivacy" value="#{jb['post.btn']}"
+                                                 actionListener="#{createPostInEventWall.uploadImage}"
+                                                 action="#{createPostInEventWall.createPost(singularEventBean.event.id)}"
+                                                 ajax="false"
+                                                 styleClass="btn btn-primary">
+                                </h:commandButton>
+                            </div>
+                            <h:graphicImage id="loading_progress" library="images" name="pageLoading.gif" width="25px"
+                                            height="25px" rendered="#{createPostInEventWall.showProgress}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </h:form>
+</h:body>
+</html>

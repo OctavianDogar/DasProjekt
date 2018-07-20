@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head></h:head>
+<h:body>
+    <h:outputStylesheet library="css" name="create_post.css"/>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <h:outputStylesheet library="css" name="bootstrap.min.css"/>
+    <h:outputStylesheet library="css" name="bootstrap.css"/>
+    <h:outputStylesheet library="css" name="bootstrap-theme.min.css"/>
+    <h:outputStylesheet library="css" name="bootstrap-theme.css"/>
+
+    <h:outputScript library="js" name="bootstrap.js"/>
+    <h:outputScript library="js" name="bootstrap.min.js"/>
+    <h:outputScript library="js" name="npm.js"/>
+
+    <h:outputStylesheet library="css" name="create_post.css"/>
+    <p:tabView>
+        <p:tab title="#{jb['post.btn']}">
+            <h:form id="create_post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="facebook-share-box">
+                        <div class="arrow"></div>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="">
+                                    <h:inputTextarea name="message" cols="40" rows="10"
+                                                     id="status_message"
+                                                     class="form-control message"
+                                                     value="#{postBean.createdPost.text}"
+                                                     style="height: 62px; max-width: 100%; max-height: 300px; overflow: hidden;"
+                                                     placeholder="Description"></h:inputTextarea>
+                                    <p:messages id="messages" autoUpdate="true" closable="true"/>
+                                    <p:watermark for="status_message" value="#{jb['description']}"
+                                                 id="watermark"/>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <div class="form-group">
+                                            <div class="btn-group">
+
+                                                <p:fileUpload label="#{jb['photo']}"
+                                                              value="#{postBean.fileUpload}"
+                                                              auto="true"
+                                                              mode="simple" skinSimple="true"
+                                                              class="icon icon-picture"/>
+                                            </div>
+
+                                            <div class="btn-group">
+
+                                                <p:fileUpload label="#{jb['video']}"
+                                                              value="#{postBean.fileUploadVideo}"
+                                                              auto="true"
+                                                              mode="simple" skinSimple="true"
+                                                              class="icon icon-picture"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <h:selectOneMenu id="combo"
+                                                             value="#{postBean.createdPost.privacy}"
+                                                             class="form-control privacy-dropdown pull-left input-sm">
+                                                <f:selectItem itemLabel="#{jb['onlyMe.label']}"
+                                                              itemValue="ONLY_ME"/>
+                                                <f:selectItem itemLabel="#{jb['friends.label']}"
+                                                              itemValue="FRIENDS"/>
+                                                <f:selectItem itemLabel="#{jb['friendOfFriends.label']}"
+                                                              itemValue="FRIENDS_OF_FRIENDS"/>
+                                                <f:selectItem itemLabel="#{jb['public.label']}"
+                                                              itemValue="PUBLIC"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 col-md-offset-5">
+                                        <h:commandButton id="submitPrivacy" value="#{jb['post.btn']}"
+                                                         actionListener="#{postBean.uploadImage}"
+                                                         action="#{postBean.createPost}"
+                                                         ajax="false"
+                                                         styleClass="btn btn-primary">
+                                        </h:commandButton>
+                                    </div>
+                                    <h:graphicImage id="loading_progress" library="images" name="pageLoading.gif" width="25px"
+                                                    height="25px" rendered="#{postBean.showProgress}"/>
+                                </div>
+                            </div>
+                            <!--
+                        </div>
+                        -->
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </p:tab>
+
+        <p:tab title="#{jb['event.btn']}">
+            <h:form id="create_event">
+
+                <div class="row">
+                    <div class="facebook-share-box">
+                        <div class="arrow"></div>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="">
+                                    <h:inputTextarea name="message" cols="40" rows="10" id="title"
+                                                     value="#{eventBean.eventDto.title}"
+                                                     class="form-control message"
+                                                     style="height: 40px; max-width: 100%; max-height: 40px; overflow: hidden;"
+                                                     placeholder="#{jb['title']}"></h:inputTextarea>
+                                    <p:watermark for="title" value="#{jb['title']}"
+                                                 id="watermark_title"/>
+                                    <div class="" style="padding-top: 10px">
+                                        <h:inputTextarea name="message" cols="40" rows="10" id="description"
+                                                         value="#{eventBean.eventDto.text}"
+                                                         class="form-control message"
+                                                         style="height: 62px; max-width: 100%; max-height: 300px; overflow: hidden;"
+                                                         placeholder="#{jb['description']}"></h:inputTextarea>
+                                        <p:watermark for="description" value="#{jb['description']}"
+                                                     id="watermark_event"/>
+                                        <p:messages id="event_message_update" autoUpdate="true"
+                                                    closable="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <div class="form-group">
+                                            <div class="btn-group">
+                                                <p:calendar id="button"
+                                                            value="#{eventBean.eventDate}"
+                                                            showOn="button"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3" style="max-width: 100px;">
+                                        <label>#{jb['hour']}</label>
+                                        <h:selectOneMenu id="event_time"
+                                                         class="form-control privacy-dropdown pull-left input-sm"
+                                                         value="#{eventBean.eventTime}">
+                                            <f:selectItem itemLabel="01"
+                                                          itemValue="01"/>
+                                            <f:selectItem itemLabel="02"
+                                                          itemValue="02"/>
+                                            <f:selectItem itemLabel="03"
+                                                          itemValue="03"/>
+                                            <f:selectItem itemLabel="04"
+                                                          itemValue="04"/>
+                                            <f:selectItem itemLabel="05"
+                                                          itemValue="05"/>
+                                            <f:selectItem itemLabel="06"
+                                                          itemValue="06"/>
+                                            <f:selectItem itemLabel="07"
+                                                          itemValue="07"/>
+                                            <f:selectItem itemLabel="08"
+                                                          itemValue="08"/>
+                                            <f:selectItem itemLabel="09"
+                                                          itemValue="09"/>
+                                            <f:selectItem itemLabel="10"
+                                                          itemValue="10"/>
+                                            <f:selectItem itemLabel="11"
+                                                          itemValue="11"/>
+                                            <f:selectItem itemLabel="12"
+                                                          itemValue="12"/>
+                                            <f:selectItem itemLabel="13"
+                                                          itemValue="13"/>
+                                            <f:selectItem itemLabel="14"
+                                                          itemValue="14"/>
+                                            <f:selectItem itemLabel="15"
+                                                          itemValue="15"/>
+                                            <f:selectItem itemLabel="16"
+                                                          itemValue="16"/>
+                                            <f:selectItem itemLabel="17"
+                                                          itemValue="17"/>
+                                            <f:selectItem itemLabel="18"
+                                                          itemValue="18"/>
+                                            <f:selectItem itemLabel="19"
+                                                          itemValue="19"/>
+                                            <f:selectItem itemLabel="20"
+                                                          itemValue="20"/>
+                                            <f:selectItem itemLabel="21"
+                                                          itemValue="21"/>
+                                            <f:selectItem itemLabel="22"
+                                                          itemValue="22"/>
+                                            <f:selectItem itemLabel="23"
+                                                          itemValue="23"/>
+                                            <f:selectItem itemLabel="24"
+                                                          itemValue="24"/>
+                                        </h:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 col-md-offset-5" style="padding-top: 10px">
+                                        <h:commandButton id="submitEvent" value="#{jb['post.btn']}"
+                                                         action="#{eventBean.createEvent}"
+                                                         class="btn btn-primary"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--
+                        </div>
+                        -->
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </p:tab>
+
+    </p:tabView>
+</h:body>
+</html>

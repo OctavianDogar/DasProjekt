@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Profile</title>
+</h:head>
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <h:outputStylesheet library="css" name="bootstrap.min.css"/>
+    <h:outputStylesheet library="css" name="bootstrap.css"/>
+    <h:outputStylesheet library="css" name="bootstrap-theme.min.css"/>
+    <h:outputStylesheet library="css" name="bootstrap-theme.css"/>
+
+    <h:outputScript library="js" name="bootstrap.js"/>
+    <h:outputScript library="js" name="bootstrap.min.js"/>
+    <h:outputScript library="js" name="npm.js"/>
+
+
+    <!-- CENTER -->
+    <h:outputStylesheet library="css" name="style.css"/>
+    <ui:composition template="templates/admin_template.xhtml">
+        <ui:define name="content_center">
+            <!-- All users (in Table) -->
+            <f:view>
+                <!--<script type="text/javascript">-->
+                <!--$(document).ready(function () {-->
+                <!--document.getElementById("javax_faces_developmentstage_messages").remove();-->
+                <!--});-->
+                <!--</script>-->
+                <h:form id="users">
+                    <h:panelGrid id="users_table" columns="3" rendered="#{adminBean.showAllUsers}">
+                        <p:dataTable var="profileDto" value="#{adminBean.profileDtos}" id="usersTable">
+
+                            <p:column headerText="#{jb['name.label']}">
+                                <h:outputText value="#{profileDto.firstName} #{profileDto.lastName}"/>
+                            </p:column>
+
+                            <p:column headerText="#{jb['email']}">
+                                <h:outputText value="#{profileDto.email}"/>
+                            </p:column>
+
+                            <p:column headerText="#{jb['editProfile']}">
+                                <h:commandLink actionListener="#{adminBean.displayEditProfile(profileDto.id)}"
+                                               value="#{jb['edit.btn']}"
+                                               style="font-weight: bold;">
+                                    <f:ajax render=":users :profile"/>
+                                </h:commandLink>
+                            </p:column>
+
+                            <p:column headerText="#{jb['deactivateAccount']}">
+                                <h:commandLink action="#{adminBean.deactivateAccount(profileDto.id)}"
+                                               value="#{adminBean.getAccountStatus(profileDto.id)}"
+                                               style="font-weight: bold;"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+
+                <h:form id="profile">
+                    <h:panelGrid class="panel panel-default" id="editPanelGrid" columns="3"
+                                 rendered="#{adminBean.showEditProfile}">
+                        <f:facet name="header">
+                            <p:graphicImage library="images" value="#{adminBean.currentProfile.photo}"
+                                            style="max-width: 100%; max-height:50%"/>
+                        </f:facet>
+                        <p:outputLabel style="margin-top:5px" for="first_name" value="#{jb['firstName']}"
+                                       styleClass="padd-10"/>
+                        <p:inplace id="first_name" editor="true">
+                            <p:inputText style="margin-top:-5px" id="firstName"
+                                         validatorMessage="#{jb['firstNameValidator.message']}"
+                                         value="#{adminBean.currentProfile.firstName}" required="true"
+                                         label="user.firstName">
+                                <!--validate firstName !-->
+                                <f:validateLength minimum="3" maximum="20"/>
+                            </p:inputText>
+                        </p:inplace>
+                        <p:message for="first_name"/>
+                        <p:outputLabel style="margin-top:5px" for="last_name" value="#{jb['lastName']}"
+                                       styleClass="padd-10"/>
+                        <p:inplace id="last_name" editor="true">
+                            <p:inputText style="margin-top:5px" id="lastName"
+                                         validatorMessage="#{jb['lastNameValidator.message']}"
+                                         value="#{adminBean.currentProfile.lastName}" required="true"
+                                         label="user.firstName">
+                                <!-- validate lastName !-->
+                                <f:validateLength minimum="3" maximum="20"/>
+                            </p:inputText>
+                        </p:inplace>
+                        <p:message for="last_name"/>
+                        <p:outputLabel style="margin-top:5px" for="e-mail" value="#{jb['email']}" styleClass="padd-10"/>
+                        <p:inplace id="e-mail" editor="true">
+                            <p:inputText style="margin-top:5px" id="email" value="#{adminBean.currentProfile.email}"
+                                         validatorMessage="#{jb['emailValidator.message']}"
+                                         validator="#{adminBean.validate}"
+                                         label="user.email">
+                                <f:validateRegex
+                                        pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                                <!-- validate email !-->"
+
+                            </p:inputText>
+                        </p:inplace>
+                        <p:message for="e-mail"/>
+                        <p:outputLabel style="margin-top:5px" for="birth_day" value="#{jb['birthDay']}"
+                                       styleClass="padd-10"/>
+                        <p:inplace style="margin-top:5px" id="birth_day" editor="true">
+                            <p:calendar id="birthday" style="padding-top:20px"
+                                        validatorMessage="#{jb['birthdayValidator.message']}"
+                                        value="#{adminBean.currentProfile.birthday}">
+                                <f:validator validatorId="calendarValidator"/>
+                            </p:calendar>
+                        </p:inplace>
+                        <p:message for="birth_day"/>
+                        <p:outputLabel style="margin-top:5px" for="gender" value="#{jb['gender']}"
+                                       styleClass="padd-10"/>
+                        <h:selectOneRadio style="margin-top:5px" id="gender" value="#{adminBean.currentProfile.gender}">
+                            <f:selectItem itemLabel="#{jb['male']}" itemValue="#{true}"/>
+                            <f:selectItem itemLabel="#{jb['female']}" itemValue="#{false}"/>
+                        </h:selectOneRadio>
+                        <p:message for="gender"/>
+
+                        <h:commandButton action="#{adminBean.updateProfile}" styleClass="btn btn-primary col-md-7"
+                                         style="width:100%; margin-left:130px; margin-top:25px" id="submit"
+                                         value="#{jb['update']}"
+                                         update=":profile :users"/>
+
+                        <h:commandButton/>
+
+                        <p:message for="submit"/>
+                    </h:panelGrid>
+                </h:form>
+
+                <br/><h:outputLabel value="#{jb['registerNewUser.label']}:" style="font-weight: bold; font-size: 30px"/><br/>
+
+                <div class="login-form">
+                    <h:form id="registerForm" styleClass="center padd-15 "
+                            style="background-color: white; min-width: 350px;">
+
+                        <div class="center" id="center">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div>
+                                        <label class="padd-9-r" for="firstNameReg">
+                                            #{jb['firstName']}:
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label class="padd-9-r" for="lastNameReg">
+                                            #{jb['lastName']}:
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label class="padd-9-r" for="emailReg">
+                                            #{jb['email']}:
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label class="padd-9-r" for="password-regReg">
+                                            #{jb['password']}:
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label class="padd-9-r" for="repeatPasswordReg">
+                                            #{jb['password']}:
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label class="padd-30" for="birthdayReg">
+                                            #{jb['birthDay']}:
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label class="padd-9-r" for="genderReg">
+                                            #{jb['gender']}:
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label class="padd-9-r" for="typeReg">
+                                            #{jb['userType']}:
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="padd-5">
+                                        <p:inputText id="firstNameReg" value="#{adminBean.registredUser.firstName}"
+                                                     style="width: 100%; "
+                                                     validatorMessage="#{jb['firstNameValidator.message']}"
+                                                     styleClass="row padd-5 form-control">
+                                            <f:validateLength minimum="3" maximum="20"/>
+                                        </p:inputText>
+                                    </div>
+                                    <div class="padd-5">
+                                        <p:inputText id="lastNameReg" value="#{adminBean.registredUser.lastName}"
+                                                     style="width: 100%; "
+                                                     validatorMessage="#{jb['lastNameValidator.message']}"
+                                                     styleClass="row padd-5 form-control">
+                                        </p:inputText>
+                                    </div>
+                                    <div class="padd-5">
+                                        <p:inputText id="emailReg" value="#{adminBean.registredUser.email}"
+                                                     validator="#{adminBean.validateRegistredEmail}"
+                                                     style="width: 100%; "
+                                                     validatorMessage="#{jb['emailValidator.message']}"
+                                                     styleClass="row padd-5 form-control">
+                                            <f:validateRegex
+                                                    pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                                        </p:inputText>
+                                    </div>
+                                    <div class="padd-5">
+                                        <p:password id="password-regReg" value="#{adminBean.registredUser.password}"
+                                                    match="repeatPasswordReg"
+                                                    style="width: 100%; "
+                                                    validatorMessage="#{jb['passwordValidator.message']}"
+                                                    styleClass="row padd-5 form-control">
+                                            <f:validator validatorId="passwordValidator"/>
+                                        </p:password>
+                                    </div>
+                                    <div class="padd-5">
+                                        <p:password id="repeatPasswordReg" value="#{adminBean.registredUser.password}"
+                                                    style="width: 100%; "
+                                                    validatorMessage="#{jb['passwordValidator.message']}"
+                                                    styleClass="row padd-5 form-control">
+                                            <f:validator validatorId="passwordValidator"/>
+                                        </p:password>
+                                    </div>
+                                    <div class="padd-5">
+                                        <p:calendar id="birthdayReg" value="#{adminBean.registredUser.birthDay}"
+                                                    style="width: 100%; "
+                                                    validatorMessage="#{jb['birthdayValidator.message']}"
+                                                    styleClass="row">
+                                            <f:validator validatorId="calendarValidator"/>
+                                        </p:calendar>
+                                    </div>
+                                    <div style="padding: 10px">
+
+                                        <h:selectOneRadio id="genderReg" value="#{adminBean.registredUser.gender}"
+                                                          styleClass="checkbox-inline">
+                                            <f:selectItem itemLabel="#{jb['male']}" itemValue="#{true}"/>
+                                            <f:selectItem itemLabel="#{jb['female']}" itemValue="#{false}"/>
+                                        </h:selectOneRadio>
+                                    </div>
+
+                                    <div style="padding: 10px">
+
+                                        <h:selectOneRadio id="typeReg" value="#{adminBean.registredUser.type}"
+                                                          styleClass="checkbox-inline">
+                                            <f:selectItem itemLabel="#{jb['admin']}" itemValue="#{true}"/>
+                                            <f:selectItem itemLabel="#{jb['user']}" itemValue="#{false}"/>
+                                        </h:selectOneRadio>
+                                    </div>
+
+
+                                    <div class="padd-5">
+                                        <h:commandLink id="submitReg" value="#{jb['register.btn']}"
+                                                       action="#{adminBean.processRegister}" styleClass="btn"
+                                                       style="background-color: #2aabd2; width: 40%; min-width: 70px;"
+                                                       update=":users ">
+                                        </h:commandLink>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </h:form>
+                </div>
+
+
+            </f:view>
+        </ui:define>
+
+        <ui:define name="content_right">
+            <f:view>
+                <h:form id="events">
+                    <h:panelGrid id="events_table" columns="3" rendered="#{adminBean.renderEventsTable}">
+                        <p:dataTable var="eventDto" value="#{adminBean.eventDtos}" id="eventsTable">
+
+                            <p:column headerText="#{jb['eventAdmin.label']}">
+                                <h:outputText value="#{eventDto.admin.firstName} #{eventDto.admin.lastName}"/>
+                            </p:column>
+
+                            <p:column headerText="#{jb['title']}">
+                                <h:outputText style="word-break: break-all" value="#{eventDto.title}"/>
+                            </p:column>
+
+                            <p:column headerText="#{jb['dueDate']}">
+                                <h:outputText value="#{eventDto.dateTime}"/>
+                            </p:column>
+
+                            <p:column headerText="#{jb['nrParticipants']}">
+                                <h:outputText value="#{adminBean.mappedParticipants.get(eventDto.id)}"/>
+                            </p:column>
+
+                            <p:column headerText="#{jb['editEvent.btn']}">
+                                <h:commandLink actionListener="#{adminBean.displayEditEvent(eventDto.id)}"
+                                               value="#{jb['edit.btn']}"
+                                               style="font-weight: bold;">
+                                    <f:ajax render=":events :editEvent"/>
+                                </h:commandLink>
+
+                            </p:column>
+
+                            <p:column headerText="#{jb['removeEvent']}">
+
+                                <p:growl id="message" showDetail="false" style-class="ui-growl-item"/>
+                                <p:commandLink value="#{jb['remove.btn']}"
+                                               action="#{adminBean.removeEvent(eventDto.id)}"
+                                               update="eventsTable">
+                                    <p:confirm header="#{jb['confirmation.label']}"
+                                               message="#{jb['eventDeleteQuestion']} #{eventDto.title}?"
+                                               icon="ui-icon-alert"/>
+                                </p:commandLink>
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                    <p:commandButton value="#{jb['yes']}" type="button"
+                                                     styleClass="ui-confirmdialog-yes"
+                                                     icon="ui-icon-check"/>
+                                    <p:commandButton value="#{jb['no']}" type="button" styleClass="ui-confirmdialog-no"
+                                                     icon="ui-icon-close"/>
+                                </p:confirmDialog>
+
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+
+                <h:form id="editEvent">
+                    <h:panelGrid class="panel panel-default" id="editEventPanelGrid" columns="3"
+                                 rendered="#{adminBean.renderEditEvent}">
+
+                        <p:outputLabel for="event_title" value="#{jb['eventTitle']}" styleClass="padd-10"
+                                       style="font-size: 20"/>
+                        <p:inplace id="event_title" editor="true">
+                            <p:inputText id="eventTitle" value="#{adminBean.currentEvent.title}" required="true"
+                                         validator="#{adminBean.validateEventName}" label="event.title">
+                                <f:validateLength minimum="3" maximum="20"/>
+                            </p:inputText>
+                        </p:inplace>
+                        <p:message for="event_title"/>
+
+
+                        <p:outputLabel for="event_text" value="#{jb['eventText']}" styleClass="padd-10"
+                                       style="font-size: 20"/>
+                        <p:inplace id="event_text" editor="true">
+                            <p:inputText id="eventText" value="#{adminBean.currentEvent.text}" required="true"
+                                         label="event.text">
+                                <f:validateLength minimum="3" maximum="50"/>
+                            </p:inputText>
+                        </p:inplace>
+                        <p:message for="event_text"/>
+
+
+                        <p:outputLabel style="font-size: 20" for="due_date" value="#{jb['dueDate']}"
+                                       styleClass="padd-10"/>
+                        <p:inplace style="margin-top:5px" id="due_date" editor="true">
+                            <p:calendar id="dueDate" style="padding-top:20px"
+                                        value="#{adminBean.currentEvent.dateTime}">
+                                <f:validator validatorId="calendarValidator"/>
+                            </p:calendar>
+                        </p:inplace>
+                        <p:message for="due_date"/>
+
+                        <h:form id="participantsListForm">
+                            <h:panelGrid id="participantsPanel" columns="1" cellpadding="5"
+                                         style="width:100%"
+                                         cellspacing="5"
+                                         rendered="#{adminBean.noParticipantsFlag}"><br/>
+                                <h:outputLabel value="#{jb['participants.label']}:"
+                                               style="font-weight: bold;
+                                               font-size: 30px"
+                                               styleClass="padd-10"/><br/>
+                                <!--<h:form>-->
+                                <p:dataScroller value="#{adminBean.participantStatuses}" var="participant"
+                                                chunkSize="5">
+                                    <br/>
+                                    <h:panelGrid columns="4" style="width:100%">
+                                        <p:column>
+                                            <p:graphicImage library="images"
+                                                            style="max-width: 100%;max-height: 100%"
+                                                            value="#{participant.profileDto.photo}" width="50"
+                                                            height="50"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:link outcome="friend_wall.xhtml"
+                                                    value="#{participant.profileDto.firstName} #{participant.profileDto.lastName}"
+                                                    style="font-weight: bold;" styleClass="padd-10">
+                                                <f:param name="id" value="#{participant.profileDto.id}"/>
+                                            </p:link>
+                                        </p:column>
+                                        <p:column>
+                                            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+
+                                                <p:column>
+
+                                                    <h:selectOneRadio style="margin-top:5px" id="userStatus"
+                                                                      value="#{participant.status}">
+                                                        <f:selectItem itemLabel="Going" itemValue="#{true}"/>
+                                                        <f:selectItem itemLabel="Not going" itemValue="#{false}"/>
+                                                    </h:selectOneRadio>
+                                                    <p:message for="userStatus"/>
+
+                                                </p:column>
+                                            </h:panelGrid>
+                                        </p:column>
+                                    </h:panelGrid>
+                                </p:dataScroller>
+                            </h:panelGrid>
+                            <h:outputLabel value="#{jb['noParticipants']}."
+                                           style="font-weight: bold; font-size: 30px"
+                                           styleClass="padd-10"
+                                           rendered="#{not adminBean.noParticipantsFlag}"/><br/>
+
+                            <h:commandButton action="#{adminBean.updateEvent}"
+                                             styleClass="btn ui-btn-right col-md-5"
+                                             style="width:100%; margin-left:130px; margin-top:25px"
+                                             id="eventSubmit"
+                                             value="#{jb['update']}"/>
+                            <p:message for="eventSubmit"/>
+                        </h:form>
+                    </h:panelGrid>
+                </h:form>
+            </f:view>
+        </ui:define>
+    </ui:composition>
+
+</h:body>
+</html>

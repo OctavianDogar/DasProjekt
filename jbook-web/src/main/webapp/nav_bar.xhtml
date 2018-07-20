@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+>
+
+<h:head>
+    <!-- Open-Close notification Popup -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#notificationLink").click(function () {
+                $("#notificationContainer").fadeToggle(300);
+                $("#requestContainer").hide();
+                $("#settings_container").hide();
+                return false;
+            });
+            $("#requestsLink").click(function () {
+                $("#requestContainer").fadeToggle(300);
+                $("#notificationContainer").hide();
+                $("#settings_container").hide();
+                return false;
+            });
+            $("#settingsLink").click(function () {
+                $("#settings_container").fadeToggle(300);
+                $("#requestContainer").hide();
+                $("#notificationContainer").hide();
+                return false;
+            });
+
+//Document Click hiding the popup
+            $(document).click(function () {
+                $("#notificationContainer").hide();
+                $("#requestContainer").hide();
+                $("#settings_container").hide();
+            });
+
+//Popup on click
+            $("#notificationContainer").click(function () {
+                return false;
+            });
+            $("#requestContainer").click(function () {
+                return false;
+            });
+            $("#settings_container").click(function () {
+                return false;
+            });
+        });
+    </script>
+
+</h:head>
+<body>
+<h:outputStylesheet library="css" name="style.css"/>
+<h:outputStylesheet library="css" name="notification.css"/>
+<h:outputStylesheet library="css" name="requests.css"/>
+<h:outputStylesheet library="css" name="bootstrap.min.css"/>
+<h:outputStylesheet library="css" name="bootstrap.css"/>
+<h:outputStylesheet library="css" name="bootstrap-theme.min.css"/>
+<h:outputStylesheet library="css" name="bootstrap-theme.css"/>
+
+<h:outputScript library="js" name="bootstrap.js"/>
+<h:outputScript library="js" name="bootstrap.min.js"/>
+<h:outputScript library="js" name="npm.js"/>
+
+<div>
+    <div class="row">
+        <div class="col-sm-2 image-padding">
+            <p:link outcome="home.xhtml">
+                <h:graphicImage library="images" name="logo.png" width="35px" height="55px"/>
+            </p:link>
+        </div>
+        <div class="col-sm-6 menu-padding">
+            <h:form id="searchForm">
+
+                <p:autoComplete id="search2" value="#{navbarBean.user}" placeholder="Search"
+                                completeMethod="#{navbarBean.completeSearch}" var="user"
+                                itemLabel="#{user.firstName} #{user.lastName}"
+                                itemValue="#{user}">
+
+                    <p:ajax update="search2" event="itemSelect" listener="#{friendWallBean.seeFriendWall}">
+                        <f:param value="#{user.id}" name="id"/>
+                    </p:ajax>
+                    <f:converter converterId="userConverter"/>
+                    <p:column>
+                        <!--<h:outputText styleClass="ui-theme #{users.photo}" style="max-height: 100%; max-width: 100%" />-->
+                        <h:graphicImage library="images" rendered="true" value="#{user.photo}" width="40" height="40"
+                                        style="max-height: 100%; max-width: 100%"/>
+                    </p:column>
+
+                    <p:column>
+                        <p:link outcome="friend_wall.xhtml" value="#{user.firstName} #{user.lastName}"
+                                style="font-weight: bold;">
+                            <f:param value="#{user.id}" name="id"/>
+                        </p:link>
+
+                    </p:column>
+
+                </p:autoComplete>
+
+                <h:commandButton id="submit" value="#{jb['search.btn']}"
+                                 action="#{navbarBean.doSearch}" styleClass="btn btn-primary">
+                    <f:param name="id" value="#{navbarBean.value}"/>
+                </h:commandButton>
+            </h:form>
+        </div>
+
+        <div class="col-md-4 menu-padding">
+            <h:form id="userIcon">
+                <div class="col-md-2" style="color: #2aabd2">
+                    <h:commandLink action="user_wall.xhtml">
+                        <h:graphicImage value="#{userWallBean.user.photo}" library="images" width="35" height="35"/>
+                    </h:commandLink>
+                </div>
+            </h:form>
+            <h:form id="userHome">
+                <div class="col-md-2" style="color: #2aabd2; padding-top: 8px; min-width: 100px">
+                    <h:commandLink styleClass="btn-link" value="#{jb['home.btn']}" action="home.xhtml"
+                                   style="color: #ffffff; padding-top: 20px; font-weight: bold; font-size: 15px;"/>
+                </div>
+            </h:form>
+            <h:form id="requestForm">
+                <p:poll interval="1" listener="#{friendRequestsBean.getRequests}"
+                        update="requestScroller"
+                        autoStart="true"/>
+                <div class="col-md-1" style="padding-top: 2px">
+                    <a href="#" id="requestsLink">
+                        <h:panelGroup rendered="#{friendRequestsBean.chunckSize > 0}">
+                            <span id="request_count">#{friendRequestsBean.chunckSize}</span>
+                        </h:panelGroup>
+                        <span class="glyphicon glyphicon-user request_effect" style="font-size: 25px"></span>
+                    </a>
+                    <div id="requestContainer">
+                        <div id="requestTitle" align="center">#{jb['friendRequestLabel']}</div>
+                        <div id="requestsBody" class="requests">
+                            <ul class="list-group">
+                                <p:dataScroller id="requestScroller" value="#{friendRequestsBean.userRequests}"
+                                                var="user"
+                                                chunkSize="5"
+                                                scrollHeight="500" rendered="#{friendRequestsBean.requestsRender}">
+                                    <div class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <p:graphicImage styleClass="padd-5"
+                                                                class="media-object photo-profile"
+                                                                library="images"
+                                                                value="#{user.photo}" width="50" height="50"/>
+                                            </div>
+                                            <div class="col-md-4" style="padding-top: 15px">
+                                                <h:commandLink action="friend_wall.xhtml"
+                                                               value="#{user.firstName} #{user.lastName}"
+                                                               style="font-weight:bold;">
+                                                    <f:param name="id" value="#{user.id}"/>
+                                                </h:commandLink>
+                                            </div>
+                                            <div class="col-md-6" style="float:right; padding-top: 5px">
+                                                <h:commandLink value="#{jb['confirm']}"
+                                                               action="#{friendRequestsBean.addFriend(user)}"
+                                                               style="font-weight:bold; width: 40%"
+                                                               styleClass="btn btn-primary">
+                                                    <f:param name="id" value="#{user.id}"/>
+                                                </h:commandLink>
+                                                <h:commandLink value="#{jb['deleteRequest']}"
+                                                               action="#{friendRequestsBean.ignoreFriendRequest(user)}"
+                                                               style="font-weight:bold; width: 60%"
+                                                               styleClass="btn btn-default">
+                                                    <f:param name="id" value="#{user.id}"/>
+                                                </h:commandLink>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p:dataScroller>
+                            </ul>
+                            <p:outputPanel rendered="#{friendRequestsBean.noRequests}">
+                                <h3 align="center">#{jb['noFriendRequests']}</h3>
+                            </p:outputPanel>
+                        </div>
+                        <div id="requestFooter" align="center">
+                            <h:commandLink
+                                    value="#{jb['seeAll']}"
+                                    action="friend_requests.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+
+
+            <h:form id="all_notifications">
+                <div class="col-md-1" style="padding-top: 2px; margin-left: 10px;">
+                    <p:poll interval="1" listener="#{notificationBean.updateNotifications}"
+                            update="notification_number scroller"
+                            autoStart="true">
+                    </p:poll>
+
+                    <a href="#" id="notificationLink">
+                        <h:panelGroup id="notification_panel" rendered="#{notificationBean.numberOfUnseen > 0}">
+                            <div id="notification_count">
+                                <h:outputText id="notification_number" value="#{notificationBean.numberOfUnseen}"/>
+                            </div>
+                        </h:panelGroup>
+                        <span class="glyphicon glyphicon-globe notif_effect" style="font-size: 25px"/>
+                    </a>
+                    <div id="notificationContainer" style="max-height: 400px;">
+                        <div id="notificationTitle">#{jb['notificationLabel']}</div>
+                        <div id="notificationsBody">
+                            <p:dataScroller id="scroller" value="#{notificationBean.notificationDtos}"
+                                            var="notificationDto"
+                                            chunkSize="5">
+                                <div class="row" style="max-width:100%; margin-left: 1px; padding-top: 5px">
+                                    <div class="col-md-12"
+                                         style="background-color: #{notificationDto.seen ? '#FFFFFF' : '#DCDCDC'} ">
+                                        <div class="col-md-2">
+                                            <h:commandLink action="friend_wall.xhtml">
+                                                <f:param value="#{notificationDto.author.id}" name="id"/>
+                                                <h:graphicImage library="images" rendered="true"
+                                                                value="#{notificationDto.author.photo}" width="40"
+                                                                height="40"/>
+                                            </h:commandLink>
+                                        </div>
+                                        <div class="col-md-10">
+
+                                            <h:commandLink action="post_details.xhtml"
+                                                           actionListener="#{notificationBean.markNotificationAsSeen(notificationDto)}"
+                                                           value="#{notificationDto.author.lastName} #{notificationDto.author.firstName} #{jb['notif.reviewed']}"
+                                                           style="font-weight: bold;"
+                                                           rendered="#{notificationDto.type == 'COMMENT_OR_LIKE'}">
+                                                <f:param value="#{notificationDto.typeId}" name="id"/>
+                                            </h:commandLink>
+
+                                            <h:commandLink
+                                                    actionListener="#{notificationBean.markNotificationAsSeen(notificationDto)}"
+                                                    action="eventLayout.xhtml"
+                                                    value="#{notificationDto.message}"
+                                                    style="font-weight: bold;"
+                                                    rendered="#{notificationDto.type == 'POST'}">
+                                                <f:param value="#{notificationDto.typeId}" name="eventId"/>
+                                            </h:commandLink>
+
+                                            <h:commandLink action="friend_requests.xhtml"
+                                                           actionListener="#{notificationBean.markNotificationAsSeen(notificationDto)}"
+                                                           value="#{notificationDto.author.lastName} #{notificationDto.author.firstName} #{jb['notif.acceptedFriendRequest']}"
+                                                           style="font-weight: bold;"
+                                                           rendered="#{notificationDto.type == 'FRIEND_ACCEPT'}">
+                                            </h:commandLink>
+
+                                            <h:commandLink action="notifications.xhtml"
+                                                           actionListener="#{notificationBean.markNotificationAsSeen(notificationDto)}"
+                                                           value="#{jb['notif.birthday1']} #{notificationDto.author.lastName} #{jb['notif.birthday2']}"
+                                                           style="font-weight: bold;"
+                                                           rendered="#{notificationDto.type == 'BIRTHDAY'}">
+                                            </h:commandLink>
+
+                                            <h:commandLink action="eventLayout.xhtml"
+                                                           actionListener="#{notificationBean.markNotificationAsSeen(notificationDto)}"
+                                                           value="#{notificationDto.eventName} #{jb['notif.isInADay']}"
+                                                           style="font-weight: bold;"
+                                                           rendered="#{notificationDto.type == 'EVENT_IN_A_DAY'}">
+                                                <f:param value="#{notificationDto.typeId}" name="eventId"/>
+                                            </h:commandLink>
+
+                                            <h:commandLink action="eventLayout.xhtml"
+                                                           actionListener="#{notificationBean.markNotificationAsSeen(notificationDto)}"
+                                                           value="#{notificationDto.author.lastName} #{notificationDto.author.firstName} #{jb['notif.modifiedTheEvent']}"
+                                                           style="font-weight: bold;"
+                                                           rendered="#{notificationDto.type == 'EVENT_MODIFIED'}">
+                                                <f:param value="#{notificationDto.typeId}" name="eventId"/>
+                                            </h:commandLink>
+
+                                            <br/>
+                                            <div class="glyphicon glyphicon-time" style="color: #808080">
+                                                <span style="margin-left: -8px; font-size: 17px; color: #808080">
+                                                    #{notificationBean.getNotificationDate(notificationDto)}
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr style="padding: 0px; margin-top: 5px; margin-bottom: 0px;"/>
+                            </p:dataScroller>
+                        </div>
+                        <div id="notificationFooter" align="center" style="font-weight: bold;">
+                            <h:commandLink value="#{jb['seeAll']}" action="notifications.xhtml"
+                                           rendered="#{notificationBean.notificationDtos.size() > 0}"/>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+
+            <div class="col-md-3" style="padding-left: 30px">
+                <h:form id="settingsButtons">
+                    <a href="#" id="settingsLink">
+                        <span class="glyphicon glyphicon-triangle-bottom notif_effect" style="font-size: 15px;
+                            margin-top: 9px; margin-left: 15px;"/>
+                    </a>
+                    <div id="settings_container" style="max-height: 115px;">
+                        <div id="settings_body">
+                            <h:commandLink action="profile.xhtml" value="#{jb['settings']}"
+                                           style="text-align: center; font-weight: bold; padding-left: 57px; margin-top: 15px"/>
+                            <hr style="padding: 0px; margin-top: 7px; margin-bottom: 7px;"/>
+
+                            <h:commandLink action="home.xhtml" value="#{jb['home.btn']}"
+                                           style="text-align: center; font-weight: bold; padding-left: 57px; margin-top: 15px"/>
+                            <hr style="padding: 0px; margin-top: 7px; margin-bottom: 7px;"/>
+
+                            <h:commandLink actionListener="#{navbarBean.doLogout}" value="#{jb['logout.btn']}"
+                                           style="text-align: center; font-weight: bold; padding-left: 57px; margin-top: 15px"/>
+                            <hr style="padding: 0px; margin-top: 7px; margin-bottom: 7px;"/>
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

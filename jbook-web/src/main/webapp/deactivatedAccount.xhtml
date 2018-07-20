@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="en" lang="en"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+
+<head>
+    <title> #{jb['jbook']}</title>
+</head>
+<body>
+<h:outputStylesheet library="css" name="style.css"/>
+<ui:composition template="templates/common.xhtml">
+    <ui:define name="header">
+        <ui:include src="header_register.xhtml"/>
+    </ui:define>
+    <ui:define name="content">
+        <f:view>
+            <div class="login-form">
+                <h:form id="registerForm" styleClass="center padd-15 "
+                        style="background-color: white; min-width: 350px;">
+                    <div class="login-message padd-5">
+                        <h4><strong>#{jb['deactivatedAccount.message']}</strong></h4>
+                    </div>
+                    </h:form>
+                </div>
+            </f:view>
+        </ui:define>
+    </ui:composition>
+</body>
+</html>

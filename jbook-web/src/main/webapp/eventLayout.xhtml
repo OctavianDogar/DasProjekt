@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+    <title>JBook Event</title>
+</h:head>
+
+<h:body>
+    <f:view>
+        <h:outputStylesheet library="css" name="style.css"/>
+        <h:outputStylesheet library="css" name="bootstrap.min.css"/>
+        <h:outputStylesheet library="css" name="bootstrap.css"/>
+        <h:outputStylesheet library="css" name="bootstrap-theme.min.css"/>
+        <h:outputStylesheet library="css" name="bootstrap-theme.css"/>
+
+        <h:outputScript library="js" name="bootstrap.js"/>
+        <h:outputScript library="js" name="bootstrap.min.js"/>
+        <h:outputScript library="js" name="npm.js"/>
+        <ui:composition template="templates/common_3_col_content.xhtml">
+            <ui:define name="content_left">
+                <div style="padding-top: 25px;" class="center">
+
+                    <div class="title" style="padding-top: 20px;">
+                        <div>
+                            <h:outputLabel value="#{singularEventBean.event.title}"
+                                           style="font-size: 200%;word-break: break-all;"/><br/>
+                        </div>
+                    </div>
+                    <div class="text-area">
+                        <div style="font-size: 150%;">
+                            <h:outputLabel value="#{jb['dueDate']}:" style="font-weight: bold;"/><br/>
+                            <h:outputText value="#{singularEventBean.event.dateString}"
+                                          styleClass="padd-5"/>
+                        </div>
+                    </div>
+                    <div class="padd-5">
+                        <h:form>
+                            <h:panelGroup rendered="#{!singularEventBean.currentUserIsGoing}"
+                                          styleClass="center padd-15">
+                                <h:commandButton id="goingToEvent" value="#{jb['going']}"
+                                                 action="#{singularEventBean.goToEvent}"
+                                                 styleClass="btn"></h:commandButton>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{singularEventBean.currentUserIsGoing}"
+                                          styleClass="center padd-15">
+                                <h:commandButton id="notGoingToEvent" value="#{jb['notGoing']}"
+                                                 action="#{singularEventBean.cancelGoingToEvent}"
+                                                 styleClass="btn"></h:commandButton>
+                            </h:panelGroup>
+                        </h:form>
+                    </div>
+                    <div class="padd-5">
+                        <h:form>
+                            <h:panelGroup rendered="#{singularEventBean.currentUserIsAdmin}">
+                                <p:link outcome="user_wall_update_event.xhtml"
+                                        value="#{jb['editEvent.btn']} "
+                                        style="font-weight: bold; padding-top: 25px;">
+                                    <f:param name="eventId" value="#{singularEventBean.event.id}"/>
+                                </p:link>
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </h:panelGroup>
+                        </h:form>
+                    </div>
+                </div>
+            </ui:define>
+            <ui:define name="content_center">
+
+                <div class="title">
+                    <h:outputLabel value="#{jb['description']}:" style="font-size: 180%; padding-left: 10pxword-break: break-all"/><br/>
+                </div>
+                <div class="text-area" style="padding-bottom: 5px ">
+                    <h:outputText value="#{singularEventBean.event.text}" style="word-break: break-all"
+                                  styleClass="padd-15"/>
+                </div>
+                <hr/>
+                <div class="input-post">
+                    <ui:include src="/create_post_in_event_wall.xhtml"/>
+                </div>
+                <hr/>
+                <h:panelGroup rendered="#{singularEventBean.eventPosts.size() == 0}">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <h4>#{jb['noPosts']}</h4>
+                        </li>
+                    </ul>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{singularEventBean.eventPosts.size() > 0}">
+                    <ui:include src="/eventPosts.xhtml"/>
+                </h:panelGroup>
+
+            </ui:define>
+            <ui:define name="content_right">
+                <h:panelGroup rendered="#{!singularEventBean.someGoing}">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <h4>#{jb['nobodyGoing']}</h4>
+                        </li>
+                    </ul>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{singularEventBean.someGoing}">
+                    <h4 style="padding-top: 20px; padding-left: 20px">
+                        <strong>
+                            #{jb['going']}:
+                        </strong>
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </h4>
+                    <div class="list-group">
+                        <p:dataScroller value="#{singularEventBean.attending}" var="participantStatus">
+                            <h:panelGroup styleClass="list-group-item" rendered="#{participantStatus.status}">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <p:graphicImage class="photo-profile"
+                                                        value="#{participantStatus.profileDto.photo}"
+                                                        width="40px"
+                                                        height="40px"/>
+                                    </div>
+                                    <div class="media-body">
+                                        <p:link outcome="friend_wall.xhtml"
+                                                value="#{participantStatus.profileDto.firstName} #{participantStatus.profileDto.lastName}"
+                                                style="font-weight: bold;">
+                                            <f:param name="id"
+                                                     value="#{participantStatus.profileDto.id}"/>
+                                        </p:link>
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+                        </p:dataScroller>
+                    </div>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{singularEventBean.someDeclined}">
+                    <h4 style="padding-top: 20px; padding-left: 20px">
+                        <strong>
+                            #{jb['notGoing']}:
+                        </strong>
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </h4>
+                    <div class="list-group">
+                        <p:dataScroller value="#{singularEventBean.declined}" var="participantStatus">
+
+                            <h:panelGroup styleClass="list-group-item" rendered="#{not participantStatus.status}">
+                                <div class="media">
+                                    <div class="media-left">
+
+                                        <p:graphicImage class="photo-profile"
+                                                        value="#{participantStatus.profileDto.photo}"
+                                                        width="40px"
+                                                        height="40px"/>
+                                    </div>
+                                    <div class="media-body">
+                                        <p:link outcome="friend_wall.xhtml"
+                                                value="#{participantStatus.profileDto.firstName} #{participantStatus.profileDto.lastName}"
+                                                style="font-weight: bold;">
+                                            <f:param name="id"
+                                                     value="#{participantStatus.profileDto.id}"/>
+                                        </p:link>
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+                        </p:dataScroller>
+                    </div>
+                </h:panelGroup>
+
+            </ui:define>
+        </ui:composition>
+    </f:view>
+</h:body>
+</html>

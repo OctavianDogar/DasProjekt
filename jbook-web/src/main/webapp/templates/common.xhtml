@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      lang="#{langBean.language}">
+<h:head></h:head>
+<f:view locale="#{languageBean.locale}">
+    <h:body>
+        <h:outputStylesheet library="css" name="style.css"/>
+        <h:outputStylesheet library="css" name="bootstrap.min.css"/>
+        <h:outputStylesheet library="css" name="bootstrap.css"/>
+        <h:outputStylesheet library="css" name="bootstrap-theme.min.css"/>
+        <h:outputStylesheet library="css" name="bootstrap-theme.css"/>
+
+        <h:outputScript library="js" name="bootstrap.js"/>
+        <h:outputScript library="js" name="bootstrap.min.js"/>
+        <h:outputScript library="js" name="npm.js"/>
+
+        <div class="header log-reg-padd">
+            <ui:insert name="header">
+                <ui:include src="/header_login.xhtml"/>
+            </ui:insert>
+        </div>
+        <div class="content-container log-reg-center-padd">
+            <div class="content-page">
+                <ui:insert name="content">
+                    <ui:include src="/templates/contents.xhtml"/>
+                </ui:insert>
+            </div>
+        </div>
+        <div class="footer log-reg-padd">
+            <ui:insert name="footer">
+                <ui:include src="/templates/footer.xhtml"/>
+            </ui:insert>
+        </div>
+    </h:body>
+</f:view>
+</html>

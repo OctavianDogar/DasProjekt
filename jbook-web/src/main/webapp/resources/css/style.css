@@ -1,0 +1,167 @@
+
+.padd-5 {
+    padding: 5px;
+}
+
+.padd-15 {
+    padding: 25px;
+}
+
+.padd-10-r {
+    padding: 10px;
+}
+
+.padd-9-r {
+    padding: 9px;
+}
+
+.padd-15 {
+    padding: 25px;
+}
+
+.space-10 {
+    border-spacing: 10px;
+}
+
+.padd-20 {
+    padding: 20px;
+}
+
+.padd-30 {
+    padding: 30px;
+}
+
+.space-10 {
+    border-spacing: 10px;
+}
+
+.inner-div {
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    margin: 0 auto;
+    background-color: white;
+}
+
+#javax_faces_developmentstage_messages {
+    visibility: hidden;
+}
+
+.forty-percent {
+    width: 40%;
+}
+
+.sixty-percent {
+    width: 60%;
+}
+
+.top-alignment {
+    vertical-align: top;
+}
+
+.post-picture {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.content_left {
+    display: inline;
+}
+
+.padd-10 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.button4 {
+    background-color: white;
+    color: black;
+    border: 2px solid #e7e7e7;
+    float: right;
+}
+
+.button4:hover {
+    background-color: #e7e7e7;
+}
+
+.footer {
+    background-color: #eeeeee;
+    position: relative;
+    alignment: center;
+
+}
+
+.general-padd {
+    padding-left: 15%;
+    padding-right: 15%;
+}
+
+.log-reg-padd {
+    padding-left: 22%;
+    padding-right: 22%;
+}
+
+.log-reg-center-padd {
+    padding-left: 30%;
+    padding-right: 30%;
+}
+
+.header {
+    background-color: #425F9C;
+    margin-top: 0;
+}
+
+.content-container {
+    background-color: #f0f0f0
+}
+
+.ui-widget-content {
+    background-color: white;
+!important;
+}
+
+.ui-growl-item {
+    background-color: whitesmoke;
+!important;
+}
+
+.login-container {
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+.center {
+    text-align: center;
+}
+
+.facebook_color {
+    background-color: #425F9C;
+}
+
+.image-padding {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.menu-padding {
+    padding-top: 25px;
+}
+
+.btn-login {
+    border-radius: 0;
+    color: white;
+}
+
+.btn-register {
+    border-radius: 0;
+    color: white;
+}
+
+.login-message {
+    color: #425F9C;
+}
+
+.login-form {
+    min-width: 150px;
+}

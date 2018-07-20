@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>edu.msg.jbook</groupId>
+        <artifactId>jbook</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>jbook-server</artifactId>
+    <packaging>ear</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>edu.msg.jbook</groupId>
+            <artifactId>jbook-backend</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>edu.msg.jbook</groupId>
+            <artifactId>jbook-web</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>2.10.1</version>
+                <configuration>
+                    <version>7</version>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <modules>
+                        <webModule>
+                            <groupId>edu.msg.jbook</groupId>
+                            <artifactId>jbook-web</artifactId>
+                        </webModule>
+                        <ejbModule>
+                            <groupId>edu.msg.jbook</groupId>
+                            <artifactId>jbook-backend</artifactId>
+                            <bundleFileName>jbook-backend-${project.version}.jar</bundleFileName>
+                        </ejbModule>
+                    </modules>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.glassfish.maven.plugin</groupId>
+                <artifactId>maven-glassfish-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <user>admin</user>
+                    <adminPassword>admin</adminPassword>
+                    <glassfishDirectory>C:\payara41</glassfishDirectory>
+                    <components>
+                        <component>
+                            <name>${project.artifactId}</name>
+                            <artifact>${project.build.directory}\${project.build.finalName}.ear</artifact>
+                        </component>
+                    </components>
+                    <domain>
+                        <name>domain1</name>
+                        <adminPort>4848</adminPort>
+                        <httpPort>8080</httpPort>
+                        <httpsPort>8443</httpsPort>
+                    </domain>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

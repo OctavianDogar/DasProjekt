@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="en" lang="en"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+
+<head>
+    <title>JSF 2.0 Hello World Register Html</title>
+</head>
+<body>
+<h:outputStylesheet library="css" name="style.css"/>
+<ui:composition template="templates/common.xhtml">
+    <ui:define name="header">
+        <ui:include src="header_register.xhtml"/>
+    </ui:define>
+    <ui:define name="content">
+        <f:view>
+            <div class="login-form">
+                <h:form id="registerForm" styleClass="center padd-15 "
+                        style="background-color: white; min-width: 350px;">
+
+                    <div class="login-message padd-5">
+                        <h4><strong>#{jb['register.message']}</strong></h4>
+                    </div>
+                    <div class="center" id="center">
+                        <p:growl showDetail="false"/>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div>
+                                    <label class="padd-9-r" for="firstName">
+                                        #{jb['firstName']}:
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="padd-9-r" for="lastName">
+                                        #{jb['lastName']}:
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="padd-9-r" for="email">
+                                        #{jb['email']}:
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="padd-9-r" for="password-reg">
+                                        #{jb['password']}:
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="padd-9-r" for="repeatPassword">
+                                        #{jb['password']}:
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="padd-30" for="birthday">
+                                        #{jb['birthDay']}:
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="padd-9-r" for="gender">
+                                        #{jb['gender']}:
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="padd-5">
+                                    <p:inputText id="firstName" value="#{registerBean.user.firstName}" style="width: 100%; "
+                                                 styleClass="row padd-5 form-control" validatorMessage="#{jb['firstNameValidator.message']}">
+                                        <f:validateLength minimum="3" maximum="20"/>
+                                    </p:inputText>
+                                </div>
+                                <div class="padd-5">
+                                    <p:inputText id="lastName" value="#{registerBean.user.lastName}" style="width: 100%; "
+                                                 styleClass="row padd-5 form-control" validatorMessage="#{jb['lastNameValidator.message']}">
+                                    </p:inputText>
+                                </div>
+                                <div class="padd-5">
+                                    <p:inputText id="email" value="#{registerBean.user.email}" validator="#{registerBean.validate}" style="width: 100%; "
+                                                 styleClass="row padd-5 form-control" validatorMessage="#{jb['emailValidator.message']}">
+                                        <f:validateRegex
+                                                pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                                    </p:inputText>
+                                </div>
+                                <div class="padd-5">
+                                    <p:password id="password-reg" value="#{registerBean.user.password}" match="repeatPassword"
+                                                style="width: 100%; " validatorMessage="#{jb['passwordValidator.message']}"
+                                                styleClass="row padd-5 form-control">
+                                        <f:validator validatorId="passwordValidator"/>
+                                    </p:password>
+                                </div>
+                                <div class="padd-5">
+                                    <p:password id="repeatPassword" value="#{registerBean.user.password}" style="width: 100%; "
+                                                styleClass="row padd-5 form-control" validatorMessage="#{jb['passwordValidator.message']}">
+                                        <f:validator validatorId="passwordValidator"/>
+                                    </p:password>
+                                </div>
+                                <div class="padd-5">
+                                    <p:calendar id="birthday" value="#{registerBean.user.birthDay}"  style="width: 100%; " validatorMessage="#{jb['birthdayValidator.message']}"
+                                                styleClass="row">
+                                        <f:validator validatorId="calendarValidator"/>
+                                    </p:calendar>
+                                </div>
+                                <div style="padding: 10px">
+
+                                    <h:selectOneRadio id="gender" value="#{registerBean.user.gender}" styleClass="checkbox-inline">
+                                        <f:selectItem itemLabel="#{jb['male']}" itemValue="#{true}"/>
+                                        <f:selectItem itemLabel="#{jb['female']}" itemValue="#{false}"/>
+                                    </h:selectOneRadio>
+                                </div>
+                                <div class="padd-5">
+                                    <h:commandButton id="submit" value="#{jb['register.btn']}"
+                                                     action="#{registerBean.processRegister}" styleClass="btn"
+                                                     style="background-color: #2aabd2; width: 40%; min-width: 70px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </h:form>
+            </div>
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    document.getElementById("javax_faces_developmentstage_messages").remove();
+                });
+            </script>
+
+        </f:view>
+    </ui:define>
+</ui:composition>
+
+</body>
+</html>

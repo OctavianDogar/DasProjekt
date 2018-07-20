@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <ui:composition template="user_wall.xhtml">
+        <ui:define name="content_center">
+            <f:view>
+                <h:form id="editEvent">
+                    <h:panelGrid class="panel panel-default" id="editEventPanelGrid" columns="3">
+                        <p:outputLabel for="event_title" value="#{jb['eventTitle']}" styleClass="padd-10"
+                                       style="font-size: 20"/>
+                        <p:inplace id="event_title" editor="true">
+                            <p:inputText id="eventTitle" value="#{userWallEventUpdateBean.currentEvent.title}" style="word-break: break-all"
+                                         required="true"
+                                         label="event.title">
+                                <f:validateLength minimum="3" maximum="20"/>
+                            </p:inputText>
+                        </p:inplace>
+                        <p:message for="event_title"/>
+                        <p:outputLabel for="event_text" value="#{jb['eventText']}" styleClass="padd-10"
+                                       style="font-size: 20"/>
+                        <p:inplace id="event_text" editor="true">
+                            <p:inputText id="eventText" value="#{userWallEventUpdateBean.currentEvent.text}"
+                                         required="true"
+                                         label="event.text">
+                                <f:validateLength minimum="3" maximum="50"/>
+                            </p:inputText>
+                        </p:inplace>
+                        <p:message for="event_text"/>
+                        <p:outputLabel style="font-size: 20" for="due_date" value="#{jb['dueDate']}" styleClass="padd-10"/>
+                        <p:inplace style="margin-top:5px" id="due_date" editor="true">
+                            <p:calendar id="dueDate" style="padding-top:20px"
+                                        value="#{userWallEventUpdateBean.currentEvent.dateTime}">
+                                <f:validator validatorId="calendarValidator"/>
+                            </p:calendar>
+                        </p:inplace>
+                        <p:message for="due_date"/>
+                        <h:form id="participantsListForm" rendered="#{userWallEventUpdateBean.noParticipantsFlag}">
+                            <h:panelGrid id="participantsPanel" columns="1" cellpadding="5"
+                                         style="width:100%"
+                                         cellspacing="5"
+                                         rendered="#{userWallEventUpdateBean.noParticipantsFlag}"><br/>
+                                <h3 align="center" style="color: #2e6da4"><strong>#{jb['participants.label']}</strong>
+                                </h3>
+                                <p:dataScroller value="#{userWallEventUpdateBean.participantStatuses}" var="participant"
+                                                chunkSize="5">
+                                    <br/>
+                                    <h:panelGrid columns="4" style="width:100%">
+                                        <p:column>
+                                            <p:graphicImage library="images"
+                                                            style="max-width: 100%;max-height: 100%"
+                                                            value="#{participant.profileDto.photo}" width="50"
+                                                            height="50"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:link outcome="friend_wall.xhtml"
+                                                    value="#{participant.profileDto.firstName} #{participant.profileDto.lastName}"
+                                                    style="font-weight: bold;" styleClass="padd-10">
+                                                <f:param name="id" value="#{participant.profileDto.id}"/>
+                                            </p:link>
+                                        </p:column>
+                                        <p:column>
+                                            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                                                <p:column>
+                                                    <h:selectOneRadio style="margin-top:5px" id="userStatus"
+                                                                      value="#{participant.status}">
+                                                        <f:selectItem itemLabel="#{jb['going']}" itemValue="#{true}"/>
+                                                        <f:selectItem itemLabel="#{jb['notGoing']}"
+                                                                      itemValue="#{false}"/>
+                                                    </h:selectOneRadio>
+                                                    <p:message for="userStatus"/>
+
+                                                </p:column>
+                                            </h:panelGrid>
+                                        </p:column>
+                                    </h:panelGrid>
+                                </p:dataScroller>
+                            </h:panelGrid>
+                            <h:commandButton action="#{userWallEventUpdateBean.updateEvent}"
+                                             styleClass="btn ui-btn-right col-md-5"
+                                             style="width:100%; margin-left:130px; margin-top:25px"
+                                             id="eventSubmit"
+                                             value="#{jb['update']}"/>
+                            <p:message for="eventSubmit"/>
+                        </h:form>
+                        <h:form rendered="#{not userWallEventUpdateBean.noParticipantsFlag}">
+                            <h:outputLabel
+                                    value="#{jb['noParticipants']}"
+                                    style="font-weight: bold; font-size: 30px"
+                                    styleClass="padd-10"/><br/>
+                            <h:commandButton action="#{userWallEventUpdateBean.updateEvent}"
+                                             styleClass="btn ui-btn-right col-md-5"
+                                             style="width:100%; margin-left:130px; margin-top:25px"
+                                             id="eventSubmitNoParti"
+                                             value="#{jb['update']}"/>
+                            <p:message for="eventSubmitNoParti"/>
+                        </h:form>
+                    </h:panelGrid>
+                </h:form>
+            </f:view>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

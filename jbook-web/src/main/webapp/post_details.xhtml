@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <ui:composition template="home.xhtml">
+        <ui:define name="content_center">
+            <f:view>
+                <h:form id="posts">
+                    <div class="list-group-item">
+                        <div class="media-left">
+                            <p:graphicImage styleClass="padd-5"
+                                            library="images"
+                                            value="#{postDetailsBean.postDto.userPhoto}" width="50"
+                                            height="50"/>
+                        </div>
+                        <div class="padd-5 media-body">
+                            <p:link outcome="friend_wall.xhtml"
+                                    value="#{postDetailsBean.postDto.firstName} #{postDetailsBean.postDto.lastName}"
+                                    style="font-weight: bold;">
+                                <f:param name="id" value="#{postDetailsBean.postDto.ownerId}"/>
+                            </p:link>
+                        </div>
+                        <div class="post-body">
+                            <div class="padd-5">
+                                <h:outputText style="max-width:100%;display: block;word-break: break-all;" value="#{postDetailsBean.postDto.text}" escape="false"/>
+                            </div>
+                            <div id="photo_padding" align="center">
+                                <p:graphicImage library="images" value="#{postDetailsBean.postDto.photo}"
+                                                styleClass="post-picture padd-10"
+                                                rendered="#{postDetailsBean.postDto.renderImage}"/>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="post-footer">
+                            <div class="post-footer-option">
+                                <h:panelGroup id="footer-options" layout="block">
+                                    <p>
+                                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                                        <h:commandLink
+                                                actionListener="#{postDetailsBean.addLikeToPost}"
+                                                value="#{jb['like.btn']}" styleClass=" padd-15">
+                                            <p:ajax update="likes"/>
+                                        </h:commandLink>
+                                        <p:commandLink id="likes"
+                                                       actionListener="#{likePopupBean.openPopUp(postDetailsBean.postDto.id)}"
+                                                       value="#{postDetailsBean.postDto.numberOfLikes}"
+                                                       styleClass="badge padd-15">
+                                            <p:ajax event="dialogReturn" listener="#{postDetailsBean.onUserChoosen}"/>
+                                        </p:commandLink>
+                                    </p>
+                                    <h:outputLabel for="com"><i
+                                            class="glyphicon glyphicon-comment"></i> #{jb['comment.label']}</h:outputLabel>
+                                </h:panelGroup>
+                            </div>
+                            <div class="post-footer-option">
+                                <p:dataScroller id="comentScroller" value="#{postDetailsBean.postDto.comments}"
+                                                var="comm">
+                                    <div class="media-left">
+                                        <p:graphicImage styleClass="padd-5"
+                                                        library="images"
+                                                        value="#{comm.imagePath}" width="40"
+                                                        height="40"/>
+                                    </div>
+                                    <div class="media-body">
+                                        <p:link outcome="friend_wall.xhtml"
+                                                value="#{comm.firstname} #{comm.lastname}"
+                                                style="font-weight: bold;">
+                                            <f:param name="id" value="#{comm.userId}"/>
+                                        </p:link>
+                                    </div>
+                                    <div>
+                                        <strong>
+                                            <p:outputLabel style="max-width:100%;display: block;word-break: break-all;"
+                                                    value="#{comm.commentText}" escape="false"></p:outputLabel>
+                                        </strong>
+                                    </div>
+                                </p:dataScroller>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h:inputTextarea name="message" cols="40" rows="10" id="com"
+                                                     value="#{postDetailsBean.comment}"
+                                                     class="form-control message"
+                                                     style="height: 40px; max-width: 100%; max-height: 40px; overflow: hidden;"
+                                                     placeholder="#{jb['comment.label']}"></h:inputTextarea>
+                                    <p:watermark for="com" value="#{jb['comment.label']}"
+                                                 id="watermark_title"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <h:commandButton id="submit" value="#{jb['add.btn']}"
+                                                     action="#{postDetailsBean.addComment}"
+                                                     styleClass="btn padd-5" style="min-width: 80px; width: 100%">
+                                    </h:commandButton>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </h:form>
+            </f:view>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <ui:composition template="friend_wall.xhtml">
+        <ui:define name="content_center">
+            <f:view>
+                <h:form id="eventsNav">
+                    <ul class="list-group">
+                        <p:dataScroller value="#{friendWallFriendsBean.userFriends}" var="user" scrollHeight="500"
+                                        rendered="#{friendWallFriendsBean.friendsRender}">
+                            <div class="list-group-item">
+                                <f:facet name="header">#{jb['friends.label']}</f:facet>
+                                <h:panelGrid columns="2">
+                                    <p:graphicImage class="media-object photo-profile" library="images"
+                                                    value="#{user.photo}" width="50" height="50"/>
+                                    <p:link outcome="friend_wall.xhtml" value="#{user.firstName} #{user.lastName}"
+                                            style="font-weight:bold;" styleClass="padd-15">
+                                        <f:param name="id" value="#{user.id}"/>
+                                    </p:link>
+                                </h:panelGrid>
+                            </div>
+                        </p:dataScroller>
+                    </ul>
+                    <p:outputPanel rendered="#{friendWallFriendsBean.noFriends}">
+                        <h3 align="center" style="color: #2e6da4">#{jb['noFriends']}</h3>
+                    </p:outputPanel>
+                </h:form>
+            </f:view>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

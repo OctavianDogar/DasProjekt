@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Wall</title>
+</h:head>
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <f:view>
+        <ui:composition template="templates/common_3_col_content.xhtml">
+            <ui:define name="content_left">
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <h5>
+                            <strong>
+                                <h:link outcome="user_wall.xhtml"
+                                        value="#{homeBean.currentUser.firstName} #{homeBean.currentUser.lastName}"
+                                        styleClass="padd-5"></h:link>
+                            </strong>
+                            <span class="glyphicon glyphicon-user"></span>
+                        </h5>
+                    </div>
+                    <div class="list-group-item">
+                        <p class="padd-5">
+                            <h:link outcome="profile.xhtml"
+                                    value="#{jb['editProfile']}" styleClass="padd-5">
+                            </h:link>
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </p>
+                    </div>
+                </div>
+            </ui:define>
+
+            <ui:define name="content_center">
+                <div class="all_notifications" style="margin-top: -30px">
+                    <div id="notificationsBody">
+                        <h3>#{jb['notificationLabel']}</h3>
+                        <h:form id="notifications_form">
+                            <div align="center" style="margin-top: 5px; font-weight: bold">
+                                <h:outputText value="#{jb['noNotifications']}"
+                                              rendered="#{notificationBean.notificationDtos.size() == 0}"/>
+                            </div>
+                            <p:dataScroller id="scroller_notifications" value="#{notificationBean.notificationDtos}"
+                                            var="notificationDto" style="margin-top: 10px;">
+                                <div class="row" style="max-width:100%; margin-left: 1px; padding-top: 5px">
+                                    <div class="col-md-12"
+                                         style="background-color: #{notificationDto.seen ? '#FFFFFF' : '#DCDCDC'} ">
+                                        <div class="col-md-2">
+                                            <h:commandLink action="friend_wall.xhtml">
+                                                <f:param value="#{notificationDto.author.id}" name="id"/>
+                                                <h:graphicImage library="images" rendered="true"
+                                                                value="#{notificationDto.author.photo}" width="40"
+                                                                height="40"/>
+                                            </h:commandLink>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <h:commandLink action="post_details.xhtml"
+                                                           actionListener="#{notificationBean.markNotificationAsSeen(notificationDto)}"
+                                                           value="#{notificationDto.author.firstName} #{notificationDto.author.lastName} #{jb['notif.reviewed']}"
+                                                           style="font-weight: bold; margin-left: -14px"
+                                                           rendered="#{notificationDto.type == 'COMMENT_OR_LIKE'}">
+                                                <f:param value="#{notificationDto.typeId}" name="id"/>
+                                            </h:commandLink>
+
+                                            <h:commandLink
+                                                    actionListener="#{notificationBean.markNotificationAsSeen(notificationDto)}"
+                                                    action="eventLayout.xhtml"
+                                                    value="#{notificationDto.author.firstName} #{notificationDto.author.lastName} #{jb['notif.postedOnTheEvent']}"
+                                                    style="font-weight: bold; margin-left: -14px"
+                                                    rendered="#{notificationDto.type == 'POST'}">
+                                                <f:param value="#{notificationDto.typeId}" name="eventId"/>
+                                            </h:commandLink>
+
+                                            <h:commandLink action="friend_requests.xhtml"
+                                                           actionListener="#{notificationBean.markNotificationAsSeen(notificationDto)}"
+                                                           value="#{notificationDto.author.firstName} #{notificationDto.author.lastName} #{jb['notif.acceptedFriendRequest']}"
+                                                           style="font-weight: bold; margin-left: -14px"
+                                                           rendered="#{notificationDto.type == 'FRIEND_ACCEPT'}">
+                                            </h:commandLink>
+
+
+                                            <h:commandLink action="notifications.xhtml"
+                                                           actionListener="#{notificationBean.markNotificationAsSeen(notificationDto)}"
+                                                           value=" #{jb['notif.birthday1']} #{notificationDto.author.firstName} #{notificationDto.author.lastName} #{jb['notif.birthday2']}"
+                                                           style="font-weight: bold; margin-left: -14px"
+                                                           rendered="#{notificationDto.type == 'BIRTHDAY'}">
+                                            </h:commandLink>
+
+                                            <h:commandLink action="eventLayout.xhtml"
+                                                           actionListener="#{notificationBean.markNotificationAsSeen(notificationDto)}"
+                                                           value="#{notificationDto.eventName} #{jb['notif.isInADay']}"
+                                                           style="font-weight: bold;"
+                                                           rendered="#{notificationDto.type == 'EVENT_IN_A_DAY'}">
+                                                <f:param value="#{notificationDto.typeId}" name="eventId"/>
+                                            </h:commandLink>
+
+                                            <h:commandLink action="eventLayout.xhtml"
+                                                           actionListener="#{notificationBean.markNotificationAsSeen(notificationDto)}"
+                                                           value="#{notificationDto.author.firstName} #{notificationDto.author.lastName} #{jb['notif.modifiedTheEvent']}
+                                                                #{notificationDto.eventName}"
+                                                           style="font-weight: bold;"
+                                                           rendered="#{notificationDto.type == 'EVENT_MODIFIED'}">
+                                                <f:param value="#{notificationDto.typeId}" name="eventId"/>
+                                            </h:commandLink>
+
+                                        </div>
+                                        <br/>
+                                        <div class="glyphicon glyphicon-time" style="color: #808080">
+                                                <span style="margin-left: -14px; font-size: 17px; color: #808080">
+                                                    #{notificationBean.getNotificationDate(notificationDto)}
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr style="padding: 0px; margin-top: 5px; margin-bottom: 0px;"/>
+                            </p:dataScroller>
+                        </h:form>
+                    </div>
+                </div>
+            </ui:define>
+
+            <ui:define name="content_right">
+                <ui:include src="/friend_suggestion.xhtml"/>
+            </ui:define>
+
+        </ui:composition>
+    </f:view>
+
+</h:body>
+</html>

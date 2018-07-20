@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head style="background: lightblue !important;">
+    <title>#{jb['likes.label']}</title>
+</h:head>
+
+<h:body style="background: white !important;">
+    <h:outputStylesheet library="css" name="post.css"/>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <h:outputStylesheet library="css" name="bootstrap.min.css"/>
+    <h:outputStylesheet library="css" name="bootstrap.css"/>
+    <h:outputStylesheet library="css" name="bootstrap-theme.min.css"/>
+    <h:outputStylesheet library="css" name="bootstrap-theme.css"/>
+
+    <h:outputScript library="js" name="bootstrap.js"/>
+    <h:outputScript library="js" name="bootstrap.min.js"/>
+    <h:outputScript library="js" name="npm.js"/>
+    <h:form>
+        <div class="list-group">
+            <div class="padd-15">
+            <h:panelGroup rendered="#{likePopupBean.currentPostLikes.size() == 0}">
+                <div class="list-group-item">
+                    <h5>Nobody likes this post. </h5>
+                </div>
+            </h:panelGroup>
+            <p:dataScroller value="#{likePopupBean.currentPostLikes}" var="user">
+                <div class="row list-group-item">
+                    <p:graphicImage class="media-object photo-profile"
+                                    library="images"
+                                    value="#{user.photo}" width="40"
+                                    height="40"/>
+
+                    <h:commandLink actionListener="#{likePopupBean.userSelectedPopup(user)}"
+                                   value="#{user.firstName} #{user.lastName}"/>
+                </div>
+            </p:dataScroller>
+            </div>
+        </div>
+        <div class="padd-15">
+        <h:commandButton value="#{jb['cancel.btn']}" styleClass="btn-default"
+                         action="#{likePopupBean.closeDialog}"></h:commandButton>
+        </div>
+    </h:form>
+</h:body>
+
+</html>

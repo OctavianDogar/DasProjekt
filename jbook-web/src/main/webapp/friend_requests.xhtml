@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Friend Requests</title>
+</h:head>
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <ui:composition template="user_wall.xhtml">
+        <ui:define name="content_center">
+            <f:view>
+                <h:form id="requestsNav">
+                    <ul class="list-group">
+                        <p:dataScroller id="requestScroller" value="#{friendRequestsBean.userRequests}"
+                                        var="user"
+                                        chunkSize="5"
+                                        scrollHeight="500" rendered="#{friendRequestsBean.requestsRender}">
+                            <div class="list-group-item">
+                                <f:facet name="header">#{jb['friendRequestLabel']}</f:facet>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <p:graphicImage styleClass="padd-5"
+                                                        class="media-object photo-profile"
+                                                        library="images"
+                                                        value="#{user.photo}" width="50" height="50"/>
+                                    </div>
+                                    <div class="col-md-4" style="padding-top: 15px">
+                                        <h:commandLink action="friend_wall.xhtml"
+                                                       value="#{user.firstName} #{user.lastName}"
+                                                       style="font-weight:bold;">
+                                            <f:param name="id" value="#{user.id}"/>
+                                        </h:commandLink>
+                                    </div>
+                                    <div class="col-md-6" style="float:right; padding-top: 5px">
+                                        <h:commandLink value="#{jb['confirm']}"
+                                                       action="#{friendRequestsBean.addFriend(user)}"
+                                                       style="font-weight:bold; width: 40%"
+                                                       styleClass="btn btn-primary">
+                                            <f:param name="id" value="#{user.id}"/>
+                                        </h:commandLink>
+                                        <h:commandLink value="#{jb['deleteRequest']}"
+                                                       action="#{friendRequestsBean.ignoreFriendRequest(user)}"
+                                                       style="font-weight:bold; width: 60%"
+                                                       styleClass="btn btn-default">
+                                            <f:param name="id" value="#{user.id}"/>
+                                        </h:commandLink>
+                                    </div>
+                                </div>
+                            </div>
+                        </p:dataScroller>
+                    </ul>
+                    <p:outputPanel rendered="#{friendRequestsBean.noRequests}">
+                        <h3 align="center" style="color: #2e6da4">#{jb['noFriendRequests']}</h3>
+                    </p:outputPanel>
+                </h:form>
+            </f:view>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

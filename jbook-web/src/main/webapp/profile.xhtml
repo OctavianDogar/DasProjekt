@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Profile</title>
+</h:head>
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <ui:composition template="templates/common_3_col_content.xhtml">
+        <ui:define name="content_center">
+            <f:view>
+                <h:form id="profile">
+                    <p:tabView>
+                        <p:tab title="#{jb['profileSettings.btn']}">
+                            <h:panelGrid columns="3">
+                                <f:facet name="header">
+                                    <p:graphicImage value="#{profileBean.user.photo}"
+                                                    style="max-width: 100%; max-height:50%"/>
+                                </f:facet>
+                                <p:outputLabel for="first_name" value="#{jb['firstName']}" styleClass="padd-10"/>
+                                <p:inplace id="first_name" editor="true">
+                                    <p:inputText id="firstName" value="#{profileBean.user.firstName}" required="true"
+                                                 label="user.firstName">
+                                        <!--validate firstName !-->
+                                        <f:validateLength minimum="3" maximum="20"/>
+                                    </p:inputText>
+                                </p:inplace>
+                                <p:message for="first_name"/>
+                                <p:outputLabel for="last_name" value="#{jb['lastName']}" styleClass="padd-10"/>
+                                <p:inplace id="last_name" editor="true">
+                                    <p:inputText id="lastName" value="#{profileBean.user.lastName}" required="true"
+                                                 label="user.firstName">
+                                        <!-- validate lastName !-->
+                                        <f:validateLength minimum="3" maximum="20"/>
+                                    </p:inputText>
+                                </p:inplace>
+                                <p:message for="last_name"/>
+                                <p:outputLabel for="e-mail" value="#{jb['email']}" styleClass="padd-10"/>
+                                <p:inplace id="e-mail" editor="true">
+                                    <p:inputText id="email" value="#{profileBean.user.email}" required="true"
+                                                 validator="#{profileBean.validate}"
+                                                 label="user.email">
+                                        <f:validateRegex
+                                                pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                                        <!-- validate email !-->"
+
+                                    </p:inputText>
+                                </p:inplace>
+                                <p:message for="e-mail"/>
+                                <p:outputLabel for="birth_day" value="#{jb['birthDay']}" styleClass="padd-10"/>
+                                <p:inplace id="birth_day" editor="true">
+                                    <p:calendar id="birthday" value="#{profileBean.user.birthday}">
+                                        <f:validator validatorId="calendarValidator"/>
+                                    </p:calendar>
+                                </p:inplace>
+                                <p:message for="birth_day"/>
+                                <p:outputLabel for="gender" value="#{jb['gender']}" styleClass="padd-10"/>
+                                <h:selectOneRadio id="gender" value="#{profileBean.user.gender}">
+                                    <f:selectItem itemLabel="#{jb['male']}" itemValue="#{true}"/>
+                                    <f:selectItem itemLabel="#{jb['female']}" itemValue="#{false}"/>
+                                </h:selectOneRadio>
+                                <p:message for="gender"/>
+                                <h:commandButton id="submit" value="#{jb['update']}" action="#{profileBean.updateProfile}"/>
+                                <p:message for="submit"/>
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="#{jb['privacySettings.btn']}">
+                            <h:panelGrid columns="2">
+                                <p:outputLabel for="profilePrivacyDropDown" value="#{jb['profilePrivacy']}"
+                                               styleClass="padd-10"/>
+                                <h:selectOneMenu id="profilePrivacyDropDown" value="#{profileBean.user.profilePrivacy}">
+                                    <f:selectItem itemLabel="#{jb['onlyMe.label']}" itemValue="ONLY_ME"/>
+                                    <f:selectItem itemLabel="#{jb['friends.label']}" itemValue="FRIENDS"/>
+                                    <f:selectItem itemLabel="#{jb['friendOfFriends.label']}" itemValue="FRIENDS_OF_FRIENDS"/>
+                                    <f:selectItem itemLabel="#{jb['public.label']}" itemValue="PUBLIC"/>
+                                </h:selectOneMenu>
+                                <p:outputLabel for="searchByNameOrEmailDropDown"
+                                               value="#{jb['searchPrivacy']}"
+                                               styleClass="padd-10"/>
+                                <h:selectOneMenu id="searchByNameOrEmailDropDown"
+                                                 value="#{profileBean.user.searchByNameOrEmailPrivacy}">
+                                    <f:selectItem itemLabel="#{jb['friendOfFriends.label']}" itemValue="FRIENDS_OF_FRIENDS"/>
+                                    <f:selectItem itemLabel="#{jb['public.label']}" itemValue="PUBLIC"/>
+                                </h:selectOneMenu>
+                                <p:outputLabel for="contactUserDropDown" value="#{jb['contactPrivacy']}"
+                                               styleClass="padd-10"/>
+                                <h:selectOneMenu id="contactUserDropDown"
+                                                 value="#{profileBean.user.contactUserPrivacy}">
+                                    <f:selectItem itemLabel="#{jb['friendOfFriends.label']}" itemValue="FRIENDS_OF_FRIENDS"/>
+                                    <f:selectItem itemLabel="#{jb['public.label']}" itemValue="PUBLIC"/>
+                                </h:selectOneMenu>
+                                <h:commandButton id="submitPrivacy" value="#{jb['update']}"
+                                                 action="#{profileBean.updateProfile}"/>
+                                <p:message for="submitPrivacy"/>
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="#{jb['changePassword.btn']}">
+                            <h:panelGrid columns="3">
+                                <p:outputLabel for="old_password" value="#{jb['oldPassword']}" styleClass="padd-10"/>
+
+                                <p:password id="old_password" value="#{profileBean.user.oldPassword}"
+                                            validator="#{profileBean.validatePassword}" required="false"/>
+
+                                <p:message for="old_password"/>
+
+                                <p:outputLabel for="new_password" value="#{jb['newPassword']}" styleClass="padd-10"/>
+                                <p:password id="new_password" value="#{profileBean.user.newPassword}"
+                                            validator="#{profileBean.validateNewPassword}" match="retyped_password"
+                                            required="false"/>
+                                <p:message for="new_password"/>
+                                <p:outputLabel for="retyped_password" value="#{jb['retypePassword.message']}" styleClass="padd-10"/>
+                                <p:password id="retyped_password" value="#{profileBean.retypedPassword}"
+                                            validator="#{profileBean.validateNewPassword}" required="false"/>
+                                <p:message for="retyped_password"/>
+                                <h:commandButton id="submitPassword" value="#{jb['submit']}"
+                                                 action="#{profileBean.updateProfile}"/>
+                                <p:message for="submitPassword"/>
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:tabView>
+                </h:form>
+                <h:form>
+                    <div class="padd-15">
+                    <h:commandButton id="disableAccount" value="#{jb['deactivateAccount']}" styleClass="btn-danger"
+                                     action="#{profileBean.disableAccount}"/>
+                    </div>
+                </h:form>
+            </f:view>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

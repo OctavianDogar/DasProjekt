@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+    <title>#{jb['event.title']}</title>
+</h:head>
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <ui:composition template="templates/common.xhtml">
+        <ui:define name="content">
+            <f:view>
+                <h:form id="eventForm">
+                    <!--<p:panel id="panel" header="Login">-->
+                    <p:messages id="msgs"/>
+
+                    <h:panelGrid id="eventPanel" columns="3" cellpadding="5" cellspacing="5">
+
+                        <!--boldified and large-->
+                        <p:outputLabel for="eventName" style="max-width:100%;display: block;word-break: break-all;" value="#{event.title}"/>
+
+                        <p:outputLabel for="eventText" style="max-width:100%;display: block;word-break: break-all;" value="#{eventBean.event.text}"/>
+
+                        <p:outputLabel for="eventDate" value="#{jb['dueDate']}"/>
+                        <p:outputLabel for="eventDate" value="#{eventBean.event.date}"/>
+
+                        <p:outputLabel for="eventParticipants" value="#{jb['event.participants']}"/>
+                        <p:dataList value="#{eventBean.event.participants}" var="participant" type="definition">
+                            <f:facet name="header">
+                                #{jb['definition']}
+                            </f:facet>
+                            Name: #{participant.firstName}, #{participant.lastName}
+                            <f:facet name="participantImage">
+                                <p:graphicImage name="#{participant.image}"/>
+                            </f:facet>
+
+                            <f:facet name="participantStatus" value="Status:">
+                                <p:graphicImage name="#{participant.status}"/>
+                            </f:facet>
+
+                        </p:dataList>
+
+                        <h:commandButton id="submit" value=" #{jb['login.btn']}" action="#{loginBean.processLogin}"/>
+
+                    </h:panelGrid>
+                    <!--</p:panel>-->
+                </h:form>
+            </f:view>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

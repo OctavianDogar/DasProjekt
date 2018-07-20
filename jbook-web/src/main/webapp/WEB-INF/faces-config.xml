@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+    http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    <application>
+        <action-listener>org.primefaces.application.DialogActionListener</action-listener>
+        <navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
+        <view-handler>org.primefaces.application.DialogViewHandler</view-handler>
+    </application>
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>de</supported-locale>
+            <supported-locale>ro</supported-locale>
+        </locale-config>
+        <resource-bundle>
+            <base-name>jbook</base-name>
+            <var>jb</var>
+        </resource-bundle>
+    </application>
+
+    <navigation-rule>
+        <from-view-id>login.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{loginBean.processLogin}</from-action>
+            <from-outcome>loginSuccess</from-outcome>
+            <to-view-id>home.xhtml</to-view-id>
+            <redirect>home.xhtml</redirect>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{loginBean.processLogin}</from-action>
+            <from-outcome>adminLoginSuccess</from-outcome>
+            <to-view-id>admin.xhtml</to-view-id>
+            <redirect>admin.xhtml</redirect>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{loginBean.processLogin}</from-action>
+            <from-outcome>loginFailed</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{loginBean.processLogin}</from-action>
+            <from-outcome>deactivatedAccount</from-outcome>
+            <to-view-id>/deactivatedAccount.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{navBarBean.doSearch}</from-action>
+            <from-outcome>searchPage*</from-outcome>
+            <to-view-id>/search.xhtml</to-view-id>
+            <redirect include-view-params="true">
+                <redirect-param>
+                    <name>query</name>
+                    <value>#{navBarBean.value}</value>
+                </redirect-param>
+            </redirect>
+        </navigation-case>
+    </navigation-rule>
+
+
+
+    <!--
+    <navigation-rule>
+        <from-view-id>register.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{registerBean.processRegister}</from-action>
+            <from-outcome>registerSuccess</from-outcome>
+            <to-view-id>/search.xhtml</to-view-id>
+            <to-view-id>confirm.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{registerBean.processRegister}</from-action>
+            <from-outcome>registerFailed</from-outcome>
+            <to-view-id>/register.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    -->
+
+    <navigation-rule>
+        <from-view-id>search.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{searchBean.processSearch}</from-action>
+            <from-outcome>searchSuccess</from-outcome>
+            <to-view-id>/search.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>nav_bar.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{navBarBean.doSearch}</from-action>
+            <from-outcome>searchPage</from-outcome>
+            <to-view-id>/search.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <navigation-case>
+            <from-action>#{navBarBean.doLogout}</from-action>
+            <from-outcome>logout</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>confirm.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{confirmationBean.processConfirmation}</from-action>
+            <from-outcome>confirmationSuccess</from-outcome>
+            <to-view-id>login.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <!--<from-view-id>friend_wall.xhtml</from-view-id>-->
+        <navigation-case>
+            <from-action>#{friendWallFriendsBean.getFriends}</from-action>
+            <!--<from-outcome>confirmationSuccess</from-outcome>-->
+            <to-view-id>friend_wall_friends.xhtml</to-view-id>
+        </navigation-case>
+
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>searchSuccess</from-outcome>
+            <to-view-id>search.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <!--<from-view-id>friend_wall.xhtml</from-view-id>-->
+        <navigation-case>
+            <from-action>#{friendWallEventsBean.getEventsForFriend}</from-action>
+            <!--<from-outcome>confirmationSuccess</from-outcome>-->
+            <to-view-id>friend_wall_events.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{friendWallBean.seeFriendWall}</from-action>
+            <!--<from-outcome>confirmationSuccess</from-outcome>-->
+            <to-view-id>friend_wall.xhtml</to-view-id>
+            <redirect>friend_wall.xhtml</redirect>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>home.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{newsBean.onUserChoosen}</from-action>
+            <redirect>friend_wall.xhtml</redirect>
+            <to-view-id>friend_wall.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+</faces-config>

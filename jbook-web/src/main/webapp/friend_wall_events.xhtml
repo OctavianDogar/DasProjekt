@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <ui:composition template="friend_wall.xhtml">
+        <ui:define name="content_center">
+            <f:view>
+                <h:form id="events">
+                    <ul class="list-group">
+                        <p:dataScroller id="scroller" value="#{friendWallEventsBean.eventDtos}" var="event"
+                                        rendered="#{friendWallEventsBean.eventRender}">
+                            <div class="list-group-item">
+                                <f:facet name="header">#{jb['events.label']}</f:facet>
+                                <div class="panel panel-default padd-10">
+                                    <div id="event_header" align="left">
+                                        <h3>
+                                            <p:link outcome="eventLayout.xhtml"
+                                                    value="#{event.title}"
+                                                    style="font-weight: bold;word-break: break-all">
+                                                <f:param name="eventId" value="#{event.id}"/>
+                                            </p:link>
+                                        </h3>
+                                        <h:outputText value="#{jb['createdBy']} "/>
+                                        <p:link outcome="friend_wall.xhtml"
+                                                value="#{event.admin.firstName} #{event.admin.lastName}"
+                                                style="font-weight: bold;">
+                                            <f:param name="id" value="#{event.admin.id}"/>
+                                        </p:link>
+                                    </div>
+                                    <div id="event_details" align="center">
+                                        <h3>
+                                            <h:outputText style="max-width:100%;display: block;word-break: break-all;" value="#{event.text} "  escape="false"/>
+                                        </h3>
+                                        <h:outputText value="#{jb['date.label']}: #{event.dateTime}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </p:dataScroller>
+                    </ul>
+                    <p:outputPanel rendered="#{friendWallEventsBean.noEvents}">
+                        <h3 align="center" style="color: #2e6da4">#{jb['noEvents']}</h3>
+                    </p:outputPanel>
+                </h:form>
+            </f:view>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

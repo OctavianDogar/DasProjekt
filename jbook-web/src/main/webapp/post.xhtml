@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:body>
+    <h:outputStylesheet library="css" name="post.css"/>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <h:outputStylesheet library="css" name="style.css"/>
+
+    <h:form id="posts">
+
+        <p:dataScroller value="#{userWallPostsBean.postDtos}" var="postDto">
+            <f:facet name="header">Posts</f:facet>
+            <div class="container">
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <section class="post-heading">
+                                <div class="row">
+                                    <div class="col-md-11">
+                                        <div class="media">
+                                            <div class="media-left">
+                                                <a href="#">
+                                                    <p:graphicImage class="media-object photo-profile" library="images"
+                                                                    name="#{postDto.userPhoto}" width="40" height="40"/>
+                                                </a>
+                                            </div>
+                                            <div class="media-body">
+                                                <h:outputText class="anchor-username" value="Someone new"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="post-body">
+                                <div>
+                                    <h:outputText value="#Some random text"/>
+                                </div>
+                                <div id="photo_padding" align="center">
+                                    <p:graphicImage library="images" name="#{postDto.photo}"
+                                                    rendered="#{postDto.renderImage}" width="300" height="300"/>
+                                </div>
+                            </section>
+                            <section class="post-footer">
+                                <hr/>
+                                <div class="post-footer-option container">
+                                    <a href="#"><i class="glyphicon glyphicon-thumbs-up"></i> Like</a>
+                                    <a href="#"><i class="glyphicon glyphicon-comment"></i> Comment</a>
+                                    <a href="#"><i class="glyphicon glyphicon-share-alt"></i> Share</a>
+                                </div>
+                                <div class="post-footer-comment-wrapper">
+                                    <div class="comment-form">
+
+                                    </div>
+                                    <div class="comment">
+                                        <div class="media">
+                                            <!--
+                                            <div class="media-left">
+                                                <p:graphicImage class="media-object photo-profile" library="images" name="#{postDto.photo}" rendered = "#{postDto.renderImage}" width="300" height="300" />
+                                            </div>
+                                            -->
+                                            <div class="media-body">
+                                                <!--
+                                                <a href="#" class="anchor-username"><h4 class="media-heading">Media heading</h4></a>
+                                                <a href="#" class="anchor-time">51 mins</a>
+                                                -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p:dataScroller>
+
+    </h:form>
+
+</h:body>
+</html>
